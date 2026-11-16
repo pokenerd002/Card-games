@@ -50,9 +50,17 @@ header{
 .wallet{
   border:1px solid var(--gold);
   padding:11px 18px;
-  border-radius:30px;
+  border-radius:18px;
   color:var(--gold-light);
+  display:flex;
+  flex-direction:column;
+  gap:7px;
 }
+.mode-switch{display:flex;gap:7px;flex-wrap:wrap}
+.mode-switch button{padding:8px 12px}
+.mode-switch button.active{outline:2px solid var(--gold-light);filter:brightness(1.12)}
+.mode-note{color:var(--muted);font-size:13px;line-height:1.5}
+.prediction-panel{display:flex;gap:9px;align-items:center;justify-content:center;flex-wrap:wrap;margin:12px 0}
 main{
   max-width:1250px;
   margin:auto;
@@ -327,13 +335,24 @@ footer{
     ♠ CARDHOUSE
     <span>THE CLASSIC CARD ARCADE</span>
   </div>
-  <div class="wallet">✦ Tokens: <strong id="tokens">0</strong></div>
+  <div class="wallet">
+    <div class="mode-switch" aria-label="Choose game mode">
+      <button id="classicModeButton" class="active" onclick="switchMode('classic')">Classic Mode</button>
+      <button id="casinoModeButton" class="secondary" onclick="switchMode('casino')">Casino Mode</button>
+    </div>
+    <div>✦ Classic Tokens: <strong id="tokens">0</strong></div>
+    <div>✧ Casino Score: <strong id="casinoScore">0</strong></div>
+    <div class="mode-note" id="modeLabel">Classic Mode — play normally and earn token rewards.</div>
+  </div>
 </header>
 
 <main>
   <h1>Welcome to Cardhouse</h1>
   <p class="subtitle">
     A collection of classic card games. Choose a table, learn the rules, and play.
+  </p>
+  <p class="mode-note" id="modeDescription">
+    Classic Mode: play without stakes and earn fixed token rewards for game wins.
   </p>
 
   <h2 class="section-title">The Game Collection</h2>
@@ -356,7 +375,9 @@ footer{
 
   <h2 class="section-title">Token Shop</h2>
   <p class="subtitle">
-    Earn fixed rewards for winning games. Tokens have no cash value and cannot be wagered.
+    Earn fixed rewards for winning games. Classic Tokens unlock cosmetic themes.
+    Casino Score tracks your Casino Mode results. Neither balance can be wagered,
+    purchased, transferred, or redeemed.
   </p>
   <div class="shop-grid" id="shop"></div>
 
@@ -376,7 +397,7 @@ footer{
 
 const games = [
   ["blackjack","♠","Blackjack","Reach 21 or get closer than the dealer without going over."],
-  ["roulette","🎡","Roulette","Spin a traditional European roulette wheel."],
+  ["roulette","🎡","Roulette","Make a free prediction, spin the European wheel, and track your results."],
   ["poker","♦","Five-Card Poker","Draw cards and compare your five-card hand with the dealer."],
   ["war","⚔","War","Draw cards against the computer. The higher card wins."],
   ["gofish","🐟","Go Fish","Collect books of four matching ranks."],
@@ -389,6 +410,8 @@ let tokens = Number(localStorage.getItem("cardhouseTokens") || 0);
 let ownedThemes = JSON.parse(localStorage.getItem("cardhouseThemes") || '["Gold"]');
 let activeTheme = localStorage.getItem("cardhouseActiveTheme") || "Gold";
 let rewarded = JSON.parse(localStorage.getItem("cardhouseRewarded") || "{}");
+let gameMode = localStorage.getItem("cardhouseMode") || "classic";
+let casinoScore = Number(localStorage.getItem("cardhouseCasinoScore") || 0);
 let currentGame = null;
 
 const $ = id => document.getElementById(id);
@@ -398,21 +421,48 @@ function saveProgress(){
   localStorage.setItem("cardhouseThemes",JSON.stringify(ownedThemes));
   localStorage.setItem("cardhouseActiveTheme",activeTheme);
   localStorage.setItem("cardhouseRewarded",JSON.stringify(rewarded));
+  localStorage.setItem("cardhouseMode",gameMode);
+  localStorage.setItem("cardhouseCasinoScore",String(casinoScore));
   updateWallet();
 }
 
 function updateWallet(){
   $("tokens").textContent=tokens;
+  $("casinoScore").textContent=casinoScore;
+  $("classicModeButton").classList.toggle("active",gameMode==="classic");
+  $("casinoModeButton").classList.toggle("active",gameMode==="casino");
+  $("classicModeButton").classList.toggle("secondary",gameMode!=="classic");
+  $("casinoModeButton").classList.toggle("secondary",gameMode!=="casino");
+  $("modeLabel").textContent=gameMode==="classic"
+    ? "Classic Mode — play normally and earn token rewards."
+    : "Casino Mode — play score challenges; no tokens or points are risked.";
+  $("modeDescription").textContent=gameMode==="classic"
+    ? "Classic Mode: play without stakes and earn fixed token rewards for game wins."
+    : "Casino Mode: play the same games with a separate score. Wins add points; nothing is staked or deducted.";
+}
+
+function switchMode(mode){
+  if(mode!=="classic"&&mode!=="casino")return;
+  if(currentGame)closeGame();
+  gameMode=mode;
+  saveProgress();
 }
 
 function rewardWin(game){
-  if(rewarded[game]) return "You already earned this game's reward.";
+  const rewardKey=gameMode+"_"+game;
+  if(rewarded[rewardKey]) return gameMode==="classic"
+    ? "You already earned this game's Classic reward."
+    : "You already earned this game's Casino Mode score reward.";
 
+  rewarded[rewardKey]=true;
+  if(gameMode==="casino"){
+    casinoScore+=25;
+    saveProgress();
+    return "You earned 25 Casino Score points!";
+  }
   tokens+=25;
-  rewarded[game]=true;
   saveProgress();
-
-  return "You earned 25 tokens!";
+  return "You earned 25 Classic Tokens!";
 }
 
 function shuffle(array){
@@ -428,7 +478,6 @@ const ranks=["A","2","3","4","5","6","7","8","9","10","J","Q","K"];
 
 function makeDeck(){
   let deck=[];
-
   for(const suit of suits){
     for(let i=0;i<ranks.length;i++){
       deck.push({
@@ -438,7 +487,6 @@ function makeDeck(){
       });
     }
   }
-
   return shuffle(deck);
 }
 
@@ -446,9 +494,7 @@ function cardHTML(card,hidden=false){
   if(hidden){
     return '<div class="playing-card back"></div>';
   }
-
   const red=card.suit==="♥"||card.suit==="♦";
-
   return `
     <div class="playing-card ${red?"red":""}">
       <div>${card.rank}${card.suit}</div>
@@ -476,7 +522,6 @@ function table(html){
 
 function startGame(id){
   currentGame=id;
-
   $("gameScreen").classList.add("active");
   $("gameTitle").textContent=games.find(g=>g[0]===id)[2];
   $("gameDescription").textContent=games.find(g=>g[0]===id)[3];
@@ -527,7 +572,6 @@ function buildShop(){
 
   $("shop").innerHTML=items.map(item=>{
     const owned=ownedThemes.includes(item.name);
-
     return `
       <div class="shop-item">
         <h3>${item.name}</h3>
@@ -551,12 +595,10 @@ function buildShop(){
 
 function buyTheme(name,price){
   if(ownedThemes.includes(name))return;
-
   if(tokens<price){
     alert("You need more tokens to unlock this theme.");
     return;
   }
-
   tokens-=price;
   ownedThemes.push(name);
   saveProgress();
@@ -565,7 +607,6 @@ function buyTheme(name,price){
 
 function useTheme(name){
   if(!ownedThemes.includes(name))return;
-
   activeTheme=name;
 
   const colors={
@@ -586,9 +627,11 @@ function resetProgress(){
   if(!confirm("Reset your tokens, themes, and rewards?"))return;
 
   tokens=0;
+  casinoScore=0;
   ownedThemes=["Gold"];
   activeTheme="Gold";
   rewarded={};
+  gameMode="classic";
 
   saveProgress();
   useTheme("Gold");
@@ -609,18 +652,15 @@ let bj={};
 function bjValue(hand){
   let total=0;
   let aces=0;
-
   hand.forEach(c=>{
     if(["J","Q","K"].includes(c.rank))total+=10;
     else if(c.rank==="A"){total+=11;aces++;}
     else total+=Number(c.rank);
   });
-
   while(total>21&&aces>0){
     total-=10;
     aces--;
   }
-
   return total;
 }
 
@@ -631,10 +671,8 @@ function startBlackjack(){
     dealer:[],
     over:false
   };
-
   bj.player.push(bj.deck.pop(),bj.deck.pop());
   bj.dealer.push(bj.deck.pop(),bj.deck.pop());
-
   renderBlackjack();
 }
 
@@ -653,16 +691,13 @@ function renderBlackjack(){
       <button onclick="bjHit()">Hit</button>
       <button onclick="bjStand()">Stand</button>
     `);
-
     status("Choose Hit or Stand.");
   }
 }
 
 function bjHit(){
   if(bj.over)return;
-
   bj.player.push(bj.deck.pop());
-
   if(bjValue(bj.player)>21){
     bj.over=true;
     finishBlackjack();
@@ -673,20 +708,16 @@ function bjHit(){
 
 function bjStand(){
   if(bj.over)return;
-
   bj.over=true;
-
   while(bjValue(bj.dealer)<17){
     bj.dealer.push(bj.deck.pop());
   }
-
   finishBlackjack();
 }
 
 function finishBlackjack(){
   const p=bjValue(bj.player);
   const d=bjValue(bj.dealer);
-
   let message;
 
   if(p>21)message="Bust! Dealer wins.";
@@ -697,7 +728,6 @@ function finishBlackjack(){
 
   renderBlackjack();
   status(message);
-
   controls(`<button onclick="startBlackjack()">Play Again</button>`);
 
   if(message.includes("You win")){
@@ -711,6 +741,7 @@ function finishBlackjack(){
 
 let rouletteHistory=[];
 let rouletteSpinning=false;
+let roulettePrediction="red";
 
 const rouletteRed=[
   1,3,5,7,9,12,14,16,18,
@@ -726,7 +757,6 @@ function renderRouletteHistory(){
   if(!rouletteHistory.length){
     return '<span style="width:auto">No spins yet</span>';
   }
-
   return rouletteHistory.map(n=>`
     <span style="background:${
       rouletteColor(n)==="red"?"#b52e36":
@@ -737,11 +767,9 @@ function renderRouletteHistory(){
 
 function startRoulette(){
   rouletteSpinning=false;
+  roulettePrediction="red";
 
   let numbers="";
-
-  // European roulette has 0 through 36.
-  // Layout is 0, then three rows of 12 numbers.
   for(let n=1;n<=36;n++){
     numbers+=`
       <div class="roulette-cell ${rouletteColor(n)}"
@@ -757,6 +785,19 @@ function startRoulette(){
       <div class="roulette-result" id="rouletteResult">
         Spin the wheel!
       </div>
+
+      <div class="prediction-panel">
+        <label for="roulettePrediction">Make a free prediction:</label>
+        <select id="roulettePrediction" onchange="roulettePrediction=this.value">
+          <option value="red">Red</option>
+          <option value="black">Black</option>
+          <option value="green">Green (0)</option>
+          <option value="even">Even</option>
+          <option value="odd">Odd</option>
+          ${Array.from({length:37},(_,n)=>`<option value="number-${n}">Number ${n}</option>`).join("")}
+        </select>
+      </div>
+      <p class="info">A correct prediction earns 10 points in Casino Mode. There is no stake and no score is deducted for an incorrect prediction.</p>
 
       <div class="roulette-grid">
         <div class="roulette-cell green"
@@ -777,15 +818,13 @@ function startRoulette(){
     </button>
   `);
 
-  status("Press Spin Wheel to begin.");
-
+  status("Choose a prediction, then spin. Predictions are free.");
   $("gameInfo").textContent=
-    "European roulette has 37 numbers: 0 through 36. This is a wheel simulator without wagers.";
+    "European roulette has 37 numbers: 0 through 36. This is a no-stakes prediction challenge. Correct predictions earn a fixed score reward in Casino Mode.";
 }
 
 function spinRoulette(){
   if(rouletteSpinning)return;
-
   rouletteSpinning=true;
 
   const button=$("spinButton");
@@ -809,6 +848,18 @@ function spinRoulette(){
     }
 
     const color=rouletteColor(result);
+    const prediction=$("roulettePrediction")?.value||roulettePrediction;
+    let correct=false;
+
+    if(prediction==="red"||prediction==="black"||prediction==="green"){
+      correct=color===prediction;
+    }else if(prediction==="even"){
+      correct=result!==0&&result%2===0;
+    }else if(prediction==="odd"){
+      correct=result%2===1;
+    }else if(prediction.startsWith("number-")){
+      correct=result===Number(prediction.slice(7));
+    }
 
     $("rouletteResult").innerHTML=`
       <strong style="font-size:45px">${result}</strong><br>
@@ -820,14 +871,22 @@ function spinRoulette(){
 
     rouletteHistory.unshift(result);
     rouletteHistory=rouletteHistory.slice(0,10);
-
     $("rouletteHistory").innerHTML=renderRouletteHistory();
 
-    status("The wheel has stopped!");
+    if(correct){
+      if(gameMode==="casino"){
+        casinoScore+=10;
+        saveProgress();
+        status("Correct prediction! +10 Casino Score points.");
+      }else{
+        status("Correct prediction! Nice call.");
+      }
+    }else{
+      status("Not quite — no points were deducted. Try another prediction.");
+    }
 
     rouletteSpinning=false;
     if(button)button.disabled=false;
-
   },1500);
 }
 
@@ -839,7 +898,6 @@ let poker={};
 
 function startPoker(){
   const deck=makeDeck();
-
   poker={
     deck,
     player:deck.splice(0,5),
@@ -847,24 +905,18 @@ function startPoker(){
     exchanged:false,
     over:false
   };
-
   renderPoker();
 }
 
 function pokerEvaluate(hand){
   const values=hand.map(c=>c.value===1?14:c.value)
     .sort((a,b)=>b-a);
-
   const counts={};
-
   values.forEach(v=>counts[v]=(counts[v]||0)+1);
-
   const groups=Object.entries(counts)
     .map(([value,count])=>({value:Number(value),count}))
     .sort((a,b)=>b.count-a.count||b.value-a.value);
-
   const flush=hand.every(c=>c.suit===hand[0].suit);
-
   const unique=[...new Set(values)];
   let straight=false;
   let high=0;
@@ -874,7 +926,6 @@ function pokerEvaluate(hand){
       straight=true;
       high=unique[0];
     }
-
     if(unique.join(",")==="14,5,4,3,2"){
       straight=true;
       high=5;
@@ -882,7 +933,6 @@ function pokerEvaluate(hand){
   }
 
   let category,tie;
-
   if(straight&&flush){category=8;tie=[high];}
   else if(groups[0].count===4){category=7;tie=groups.map(g=>g.value);}
   else if(groups[0].count===3&&groups[1].count===2){category=6;tie=groups.map(g=>g.value);}
@@ -897,23 +947,18 @@ function pokerEvaluate(hand){
     "High Card","One Pair","Two Pair","Three of a Kind",
     "Straight","Flush","Full House","Four of a Kind","Straight Flush"
   ];
-
   return {category,tie,name:names[category],groups};
 }
 
 function comparePokerHands(a,b){
   const x=pokerEvaluate(a);
   const y=pokerEvaluate(b);
-
   if(x.category!==y.category)return x.category>y.category?1:-1;
-
   for(let i=0;i<Math.max(x.tie.length,y.tie.length);i++){
     const first=x.tie[i]||0;
     const second=y.tie[i]||0;
-
     if(first!==second)return first>second?1:-1;
   }
-
   return 0;
 }
 
@@ -929,7 +974,6 @@ function renderPoker(){
 
   if(!poker.exchanged){
     status("Choose up to three cards to exchange, or keep your hand.");
-
     $("gameInfo").innerHTML=`
       <p>Select cards to exchange:</p>
       <div class="hand">
@@ -941,7 +985,6 @@ function renderPoker(){
         `).join("")}
       </div>
     `;
-
     controls(`
       <button onclick="pokerExchange()">Exchange Selected Cards</button>
       <button class="secondary" onclick="pokerKeep()">Keep All Cards</button>
@@ -951,20 +994,15 @@ function renderPoker(){
 
 function pokerExchange(){
   if(poker.exchanged||poker.over)return;
-
   const selected=[];
-
   for(let i=0;i<5;i++){
     if($("pokerCard"+i)?.checked)selected.push(i);
   }
-
   if(selected.length>3){
     status("You may exchange up to three cards.");
     return;
   }
-
   selected.forEach(i=>poker.player[i]=poker.deck.pop());
-
   poker.exchanged=true;
   pokerDealerPlay();
 }
@@ -977,36 +1015,27 @@ function pokerKeep(){
 
 function pokerDealerPlay(){
   const counts={};
-
   poker.dealer.forEach(c=>{
     const v=c.value===1?14:c.value;
     counts[v]=(counts[v]||0)+1;
   });
-
   const keep=[];
-
   Object.keys(counts).forEach(v=>{
     if(counts[v]>=2)keep.push(Number(v));
   });
-
   if(!keep.length){
     const high=Math.max(...poker.dealer.map(c=>c.value===1?14:c.value));
     keep.push(high);
   }
-
   let replaced=0;
-
   poker.dealer=poker.dealer.map(c=>{
     const value=c.value===1?14:c.value;
-
     if(!keep.includes(value)&&replaced<3){
       replaced++;
       return poker.deck.pop();
     }
-
     return c;
   });
-
   poker.over=true;
   finishPoker();
 }
@@ -1033,7 +1062,6 @@ function finishPoker(){
   }
 
   controls(`<button onclick="startPoker()">Deal New Hand</button>`);
-
   $("gameInfo").innerHTML+=`
     <p class="info">
       Rankings: High Card, Pair, Two Pair, Three of a Kind,
@@ -1050,14 +1078,12 @@ let war={};
 
 function startWar(){
   const deck=makeDeck();
-
   war={
     player:deck.slice(0,26),
     cpu:deck.slice(26),
     round:0,
     over:false
   };
-
   renderWar();
 }
 
@@ -1069,7 +1095,6 @@ function renderWar(){
     <div class="hand">${cardHTML({rank:"?",suit:"♠"},true)}</div>
     <p class="score">Round ${war.round}</p>
   `);
-
   controls(war.over?
     `<button onclick="startWar()">New Game</button>`:
     `<button onclick="warRound()">Draw Cards</button>`
@@ -1078,19 +1103,14 @@ function renderWar(){
 
 function warRound(){
   if(war.over)return;
-
   let pile=[];
-
   if(!war.player.length||!war.cpu.length){
     endWar();
     return;
   }
-
   let p=war.player.shift();
   let c=war.cpu.shift();
-
   pile.push(p,c);
-
   let pv=p.value===1?14:p.value;
   let cv=c.value===1?14:c.value;
 
@@ -1101,16 +1121,12 @@ function warRound(){
       renderWar();
       return;
     }
-
     for(let i=0;i<3;i++){
       pile.push(war.player.shift(),war.cpu.shift());
     }
-
     p=war.player.shift();
     c=war.cpu.shift();
-
     pile.push(p,c);
-
     pv=p.value===1?14:p.value;
     cv=c.value===1?14:c.value;
   }
@@ -1124,14 +1140,12 @@ function warRound(){
   }
 
   war.round++;
-
   if(!war.player.length||!war.cpu.length)endWar();
   else renderWar();
 }
 
 function endWar(){
   war.over=true;
-
   if(war.player.length>war.cpu.length){
     status("You win the game!");
     $("gameInfo").textContent=rewardWin("war");
@@ -1140,7 +1154,6 @@ function endWar(){
   }else{
     status("The game is tied.");
   }
-
   renderWar();
 }
 
@@ -1152,7 +1165,6 @@ let gf={};
 
 function startGoFish(){
   const deck=makeDeck();
-
   gf={
     deck,
     player:deck.splice(0,7),
@@ -1163,7 +1175,6 @@ function startGoFish(){
     over:false,
     message:"Your turn. Ask for a rank."
   };
-
   gfCheckBooks("player");
   gfCheckBooks("cpu");
   gfCheckEnd();
@@ -1173,13 +1184,10 @@ function startGoFish(){
 function gfCheckBooks(who){
   const hand=gf[who];
   const counts={};
-
   hand.forEach(c=>counts[c.rank]=(counts[c.rank]||0)+1);
-
   for(const rank of Object.keys(counts)){
     if(counts[rank]===4){
       gf[who]=gf[who].filter(c=>c.rank!==rank);
-
       if(who==="player")gf.books++;
       else gf.cpuBooks++;
     }
@@ -1188,7 +1196,6 @@ function gfCheckBooks(who){
 
 function gfDraw(who){
   if(!gf.deck.length)return null;
-
   const card=gf.deck.pop();
   gf[who].push(card);
   return card;
@@ -1198,7 +1205,6 @@ function gfCheckEnd(){
   if(gf.books+gf.cpuBooks===13||
      (!gf.deck.length&&(!gf.player.length||!gf.cpu.length))){
     gf.over=true;
-
     if(gf.books>gf.cpuBooks){
       gf.message="You win Go Fish!";
       $("gameInfo").textContent=rewardWin("gofish");
@@ -1207,10 +1213,8 @@ function gfCheckEnd(){
     }else{
       gf.message="The game is tied.";
     }
-
     return true;
   }
-
   return false;
 }
 
@@ -1224,7 +1228,6 @@ function renderGoFish(){
       Cards in pond: ${gf.deck.length}
     </p>
   `);
-
   status(gf.message);
 
   if(gf.over){
@@ -1234,7 +1237,6 @@ function renderGoFish(){
 
   if(gf.turn==="player"){
     const available=[...new Set(gf.player.map(c=>c.rank))];
-
     controls(`
       <label>Ask for:
         <select id="gfRank">
@@ -1250,7 +1252,6 @@ function renderGoFish(){
 
 function gfAsk(){
   if(gf.over||gf.turn!=="player")return;
-
   if(!gf.player.length){
     if(!gfDraw("player")){
       gfCheckEnd();
@@ -1260,14 +1261,12 @@ function gfAsk(){
   }
 
   const rank=$("gfRank").value;
-
   if(!gf.player.some(c=>c.rank===rank)){
     status("You must ask for a rank in your hand.");
     return;
   }
 
   const found=gf.cpu.filter(c=>c.rank===rank);
-
   if(found.length){
     gf.player.push(...found);
     gf.cpu=gf.cpu.filter(c=>c.rank!==rank);
@@ -1275,7 +1274,6 @@ function gfAsk(){
     gfCheckBooks("player");
   }else{
     const drawn=gfDraw("player");
-
     if(!drawn){
       gf.message="The pond is empty. Your turn ends.";
       gf.turn="cpu";
@@ -1294,7 +1292,6 @@ function gfAsk(){
 
 function gfCpuTurn(){
   if(gf.over||gf.turn!=="cpu")return;
-
   if(!gf.cpu.length){
     if(!gfDraw("cpu")){
       gfCheckEnd();
@@ -1304,7 +1301,6 @@ function gfCpuTurn(){
   }
 
   const available=[...new Set(gf.cpu.map(c=>c.rank))];
-
   if(!available.length){
     gfCheckEnd();
     renderGoFish();
@@ -1321,7 +1317,6 @@ function gfCpuTurn(){
     gfCheckBooks("cpu");
   }else{
     const drawn=gfDraw("cpu");
-
     if(drawn&&drawn.rank===rank){
       gf.message=`Computer draws a ${rank} and gets another turn.`;
       gfCheckBooks("cpu");
@@ -1329,7 +1324,6 @@ function gfCpuTurn(){
       renderGoFish();
       return;
     }
-
     gf.message="Computer says Go Fish and draws a card.";
   }
 
@@ -1346,7 +1340,6 @@ let ce={};
 
 function startEights(){
   const deck=makeDeck();
-
   ce={
     deck,
     player:deck.splice(0,7),
@@ -1356,14 +1349,12 @@ function startEights(){
     over:false,
     suit:null
   };
-
   ce.suit=ce.pile[0].suit;
   renderEights();
 }
 
 function ceCanPlay(card){
   const top=ce.pile[ce.pile.length-1];
-
   return card.rank==="8"||
     card.suit===ce.suit||
     card.rank===top.rank;
@@ -1410,10 +1401,8 @@ function renderEights(){
 
 function cePlay(){
   if(ce.over||ce.turn!=="player")return;
-
   const index=Number($("ceCard").value);
   const card=ce.player[index];
-
   if(!card||!ceCanPlay(card)){
     status("That card cannot be played.");
     return;
@@ -1427,11 +1416,7 @@ function cePlay(){
       "Choose a suit: S for Spades, H for Hearts, D for Diamonds, C for Clubs",
       "S"
     );
-
-    const choices={
-      S:"♠",H:"♥",D:"♦",C:"♣"
-    };
-
+    const choices={S:"♠",H:"♥",D:"♦",C:"♣"};
     ce.suit=choices[(choice||"S").toUpperCase()]||"♠";
   }else{
     ce.suit=card.suit;
@@ -1448,12 +1433,10 @@ function cePlay(){
 
 function ceDraw(){
   if(ce.over||ce.turn!=="player")return;
-
   if(!ce.deck.length){
     status("The draw pile is empty.");
     return;
   }
-
   ce.player.push(ce.deck.pop());
   ce.turn="cpu";
   renderEights();
@@ -1461,19 +1444,15 @@ function ceDraw(){
 
 function ceCpuTurn(){
   if(ce.over||ce.turn!=="cpu")return;
-
   const index=ce.cpu.findIndex(ceCanPlay);
-
   if(index>=0){
     const card=ce.cpu.splice(index,1)[0];
     ce.pile.push(card);
-
     if(card.rank==="8"){
       ce.suit=suits[Math.floor(Math.random()*4)];
     }else{
       ce.suit=card.suit;
     }
-
     if(!ce.cpu.length){
       ceEnd(false);
       return;
@@ -1488,14 +1467,12 @@ function ceCpuTurn(){
 
 function ceEnd(playerWins){
   ce.over=true;
-
   if(playerWins){
     status("You win Crazy Eights!");
     $("gameInfo").textContent=rewardWin("eights");
   }else{
     status("Computer wins Crazy Eights.");
   }
-
   renderEights();
 }
 
@@ -1508,17 +1485,13 @@ let om={};
 function omRemovePairs(hand){
   const remaining=[];
   const counts={};
-
   hand.forEach(c=>{
     counts[c.rank]=(counts[c.rank]||0)+1;
   });
-
   const remove={};
-
   for(const rank in counts){
     remove[rank]=Math.floor(counts[rank]/2)*2;
   }
-
   hand.forEach(c=>{
     if(remove[c.rank]>0){
       remove[c.rank]--;
@@ -1526,7 +1499,6 @@ function omRemovePairs(hand){
       remaining.push(c);
     }
   });
-
   return remaining;
 }
 
@@ -1534,12 +1506,9 @@ function startOldMaid(){
   const deck=makeDeck().filter(c=>
     !(c.rank==="K"&&c.suit==="♠")
   );
-
   shuffle(deck);
-
   const player=[];
   const cpu=[];
-
   deck.forEach((c,i)=>{
     if(i%2===0)player.push(c);
     else cpu.push(c);
@@ -1551,7 +1520,6 @@ function startOldMaid(){
     turn:"player",
     over:false
   };
-
   renderOldMaid();
 }
 
@@ -1559,12 +1527,10 @@ function renderOldMaid(){
   table(`
     <h3>Your Cards (${om.player.length})</h3>
     ${showCards(om.player)}
-
     <h3>Computer Cards (${om.cpu.length})</h3>
     <div class="hand">
       ${om.cpu.map(()=>cardHTML({},true)).join("")}
     </div>
-
     <p class="info">Match pairs of the same rank. The unmatched King is the Old Maid.</p>
   `);
 
@@ -1592,7 +1558,6 @@ function renderOldMaid(){
 function omCheckEnd(){
   if(om.player.length===0||om.cpu.length===0){
     om.over=true;
-
     if(om.player.length===1&&om.player[0].rank==="K"){
       status("You have the Old Maid. Computer wins.");
     }else if(om.cpu.length===1&&om.cpu[0].rank==="K"){
@@ -1601,43 +1566,33 @@ function omCheckEnd(){
     }else{
       status("The game is complete.");
     }
-
     return true;
   }
-
   return false;
 }
 
 function omPlayerPick(){
   if(om.over||om.turn!=="player"||!om.cpu.length)return;
-
   const index=Number($("omPick").value);
-
   om.player.push(om.cpu.splice(index,1)[0]);
   om.player=omRemovePairs(om.player);
-
   if(omCheckEnd()){
     renderOldMaid();
     return;
   }
-
   om.turn="cpu";
   renderOldMaid();
 }
 
 function omCpuPick(){
   if(om.over||om.turn!=="cpu"||!om.player.length)return;
-
   const index=Math.floor(Math.random()*om.player.length);
-
   om.cpu.push(om.player.splice(index,1)[0]);
   om.cpu=omRemovePairs(om.cpu);
-
   if(omCheckEnd()){
     renderOldMaid();
     return;
   }
-
   om.turn="player";
   renderOldMaid();
 }
@@ -1653,14 +1608,11 @@ let sol={};
 function startSolitaire(){
   const deck=makeDeck();
   const tableau=[];
-
   for(let i=0;i<7;i++){
     const pile=deck.splice(0,i+1);
-
     pile.forEach((card,j)=>{
       card.faceUp=j===pile.length-1;
     });
-
     tableau.push(pile);
   }
 
@@ -1673,7 +1625,6 @@ function startSolitaire(){
     moves:0,
     over:false
   };
-
   renderSolitaire();
 }
 
@@ -1683,9 +1634,7 @@ function solColor(card){
 
 function solCanTableau(card,pile){
   if(!pile.length)return card.rank==="K";
-
   const top=pile[pile.length-1];
-
   return top.faceUp&&
     solColor(top)!==solColor(card)&&
     card.value===top.value-1;
@@ -1693,75 +1642,57 @@ function solCanTableau(card,pile){
 
 function solCanFoundation(card,pile){
   if(!pile.length)return card.rank==="A";
-
   const top=pile[pile.length-1];
-
   return top.suit===card.suit&&
     card.value===top.value+1;
 }
 
 function solGetSelection(){
   if(!sol.selected)return null;
-
   const s=sol.selected;
-
   if(s.type==="w"){
     if(!sol.waste.length)return null;
-
     return {
       pile:sol.waste,
       index:sol.waste.length-1
     };
   }
-
   if(s.type==="t"){
     const pile=sol.tableau[s.column];
-
     if(!pile||!pile[s.index])return null;
-
     return {pile,index:s.index};
   }
-
   return null;
 }
 
 function solSelectWaste(){
   if(sol.over||!sol.waste.length)return;
-
   sol.selected={
     type:"w",
     index:sol.waste.length-1
   };
-
   renderSolitaire();
 }
 
 function solSelectTableau(column,index){
   if(sol.over)return;
-
   const pile=sol.tableau[column];
-
   if(!pile[index]||!pile[index].faceUp)return;
-
   sol.selected={
     type:"t",
     column,
     index
   };
-
   renderSolitaire();
 }
 
 function solMoveToTableau(column){
   if(sol.over)return;
-
   const selection=solGetSelection();
-
   if(!selection){
     status("Select a face-up card first.");
     return;
   }
-
   const from=selection.pile;
   const index=selection.index;
   const moving=from.slice(index);
@@ -1773,7 +1704,6 @@ function solMoveToTableau(column){
     renderSolitaire();
     return;
   }
-
   if(!solCanTableau(card,destination)){
     status("Invalid move. Build descending with alternating colors. Only Kings go in empty columns.");
     return;
@@ -1781,40 +1711,31 @@ function solMoveToTableau(column){
 
   from.splice(index);
   destination.push(...moving);
-
   if(from!==sol.waste&&from.length){
     from[from.length-1].faceUp=true;
   }
-
   sol.selected=null;
   sol.moves++;
-
   solCheckWin();
   renderSolitaire();
 }
 
 function solMoveToFoundation(){
   if(sol.over)return;
-
   const selection=solGetSelection();
-
   if(!selection){
     status("Select a card first.");
     return;
   }
-
   const from=selection.pile;
   const index=selection.index;
-
   if(index!==from.length-1){
     status("Only one card at a time can move to a foundation.");
     return;
   }
-
   const card=from[index];
   const foundationIndex=suits.indexOf(card.suit);
   const destination=sol.foundation[foundationIndex];
-
   if(!solCanFoundation(card,destination)){
     status("Foundations must build upward from Ace to King in the same suit.");
     return;
@@ -1822,23 +1743,18 @@ function solMoveToFoundation(){
 
   from.pop();
   destination.push(card);
-
   if(from!==sol.waste&&from.length){
     from[from.length-1].faceUp=true;
   }
-
   sol.selected=null;
   sol.moves++;
-
   solCheckWin();
   renderSolitaire();
 }
 
 function solDraw(){
   if(sol.over)return;
-
   sol.selected=null;
-
   if(sol.stock.length){
     const card=sol.stock.pop();
     card.faceUp=true;
@@ -1851,7 +1767,6 @@ function solDraw(){
     status("No cards remain in the stock or waste.");
     return;
   }
-
   sol.moves++;
   renderSolitaire();
 }
@@ -1892,7 +1807,6 @@ function solRenderPile(pile,column){
 function renderSolitaire(){
   let html=`
     <h3>Stock and Waste</h3>
-
     <div class="hand">
       <div>
         <p class="info">Stock (${sol.stock.length})</p>
@@ -1900,7 +1814,6 @@ function renderSolitaire(){
           ${sol.stock.length?'<div class="playing-card back"></div>':"Recycle"}
         </button>
       </div>
-
       <div>
         <p class="info">Waste</p>
         ${sol.waste.length?`
@@ -1922,7 +1835,6 @@ function renderSolitaire(){
     </div>
 
     <h3>Tableau</h3>
-
     <div class="solitaire-columns">
       ${sol.tableau.map((pile,i)=>`
         <div class="solitaire-column">
@@ -1934,15 +1846,12 @@ function renderSolitaire(){
   `;
 
   table(html);
-
   controls(`
     <button onclick="solDraw()">Draw / Recycle Stock</button>
     <button onclick="solMoveToFoundation()">Move to Foundation</button>
     <button class="secondary" onclick="startSolitaire()">New Game</button>
   `);
-
   status(sol.over?"Game completed!":"Select a face-up card, then choose a destination column or foundation.");
-
   $("gameInfo").innerHTML=`
     <p>Moves: ${sol.moves}</p>
     <p class="info">
