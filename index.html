@@ -1,0 +1,675 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Classic Card Games</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: #101b17;
+    color: white;
+    min-height: 100vh;
+}
+
+header {
+    padding: 25px 7%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #344b3e;
+}
+
+.logo {
+    font-size: 25px;
+    font-weight: bold;
+    color: #e5bd70;
+}
+
+.logo span {
+    color: white;
+}
+
+.header-tag {
+    color: #a9b9ae;
+    font-size: 13px;
+}
+
+.hero {
+    text-align: center;
+    padding: 65px 20px 35px;
+}
+
+.hero h1 {
+    font-size: clamp(35px, 6vw, 55px);
+    margin-bottom: 12px;
+}
+
+.hero h1 span {
+    color: #e5bd70;
+}
+
+.hero p {
+    color: #a9b9ae;
+    font-size: 16px;
+}
+
+.divider {
+    width: 65px;
+    height: 3px;
+    background: #d7ad61;
+    margin: 25px auto;
+}
+
+.games {
+    max-width: 1150px;
+    margin: auto;
+    padding: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 22px;
+}
+
+.game-card {
+    background: #1c2d25;
+    border: 1px solid #344b3e;
+    border-radius: 15px;
+    padding: 25px;
+    transition: .25s;
+    cursor: pointer;
+}
+
+.game-card:hover {
+    transform: translateY(-7px);
+    border-color: #d7ad61;
+    box-shadow: 0 10px 30px #0005;
+}
+
+.game-icon {
+    font-size: 48px;
+    margin-bottom: 18px;
+}
+
+.game-card h2 {
+    font-size: 21px;
+    margin-bottom: 9px;
+}
+
+.game-card p {
+    color: #a9b9ae;
+    font-size: 14px;
+    line-height: 1.5;
+    min-height: 45px;
+}
+
+.play-btn {
+    margin-top: 22px;
+    width: 100%;
+    padding: 12px;
+    background: #d7ad61;
+    color: #172019;
+    border: none;
+    border-radius: 7px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.play-btn:hover {
+    background: #f0cb83;
+}
+
+#gameScreen {
+    display: none;
+    max-width: 1000px;
+    margin: 35px auto;
+    padding: 20px;
+}
+
+.back-btn {
+    background: transparent;
+    color: #e5bd70;
+    border: 1px solid #d7ad61;
+    padding: 10px 18px;
+    border-radius: 7px;
+    cursor: pointer;
+    margin-bottom: 25px;
+}
+
+#gameTitle {
+    font-size: 32px;
+    margin-bottom: 10px;
+}
+
+#gameDescription {
+    color: #a9b9ae;
+    margin-bottom: 25px;
+}
+
+.table {
+    background: #145337;
+    border: 8px solid #563b25;
+    border-radius: 25px;
+    min-height: 350px;
+    padding: 30px;
+    text-align: center;
+    box-shadow: inset 0 0 30px #0005;
+}
+
+#gameArea {
+    margin: 25px 0;
+}
+
+.playing-card {
+    display: inline-flex;
+    width: 65px;
+    height: 95px;
+    background: white;
+    color: #171717;
+    border-radius: 8px;
+    margin: 5px;
+    align-items: center;
+    justify-content: center;
+    font-size: 23px;
+    font-weight: bold;
+    box-shadow: 0 3px 8px #0006;
+}
+
+.red {
+    color: #d32f2f;
+}
+
+.game-controls button {
+    padding: 12px 20px;
+    margin: 6px;
+    border: none;
+    border-radius: 7px;
+    background: #e5bd70;
+    color: #172019;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.game-controls button:hover {
+    background: white;
+}
+
+#status {
+    margin-top: 20px;
+    color: #f2d99f;
+    font-size: 17px;
+    min-height: 25px;
+}
+
+footer {
+    text-align: center;
+    color: #718278;
+    padding: 45px 15px;
+    font-size: 13px;
+}
+
+@media(max-width:600px) {
+    header {
+        padding: 20px;
+    }
+
+    .table {
+        padding: 15px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo">♠ CARD<span>HOUSE</span></div>
+    <div class="header-tag">CLASSIC GAME COLLECTION</div>
+</header>
+
+<main id="menu">
+
+    <section class="hero">
+        <h1>Classic <span>Card Games</span></h1>
+        <p>Your favorite card games, all in one place.</p>
+        <div class="divider"></div>
+    </section>
+
+    <section class="games">
+
+        <div class="game-card" onclick="startGame('Solitaire')">
+            <div class="game-icon">♠️</div>
+            <h2>Solitaire</h2>
+            <p>Build four foundation piles in ascending order.</p>
+            <button class="play-btn">Play Solitaire →</button>
+        </div>
+
+        <div class="game-card" onclick="startGame('Blackjack')">
+            <div class="game-icon">♣️</div>
+            <h2>Blackjack</h2>
+            <p>Try to reach 21 without going over.</p>
+            <button class="play-btn">Play Blackjack →</button>
+        </div>
+
+        <div class="game-card" onclick="startGame('Go Fish')">
+            <div class="game-icon">🐟</div>
+            <h2>Go Fish</h2>
+            <p>Collect matching pairs and ask for the cards you need.</p>
+            <button class="play-btn">Play Go Fish →</button>
+        </div>
+
+        <div class="game-card" onclick="startGame('War')">
+            <div class="game-icon">⚔️</div>
+            <h2>War</h2>
+            <p>Battle your opponent by playing the highest card.</p>
+            <button class="play-btn">Play War →</button>
+        </div>
+
+        <div class="game-card" onclick="startGame('Crazy Eights')">
+            <div class="game-icon">♥️</div>
+            <h2>Crazy Eights</h2>
+            <p>Match suits or numbers and get rid of your cards.</p>
+            <button class="play-btn">Play Crazy Eights →</button>
+        </div>
+
+        <div class="game-card" onclick="startGame('Old Maid')">
+            <div class="game-icon">🃏</div>
+            <h2>Old Maid</h2>
+            <p>Match cards and avoid getting stuck with the Old Maid.</p>
+            <button class="play-btn">Play Old Maid →</button>
+        </div>
+
+    </section>
+</main>
+
+<section id="gameScreen">
+    <button class="back-btn" onclick="backToMenu()">← Back to Games</button>
+
+    <h1 id="gameTitle"></h1>
+    <p id="gameDescription"></p>
+
+    <div class="table">
+        <div id="gameArea"></div>
+        <div class="game-controls" id="controls"></div>
+        <div id="status">Ready to play?</div>
+    </div>
+</section>
+
+<footer>
+    CARDHOUSE © 2026 | THE CLASSIC CARD GAME COLLECTION
+</footer>
+
+<script>
+let deck = [];
+let player = [];
+let dealer = [];
+let currentGame = "";
+let gameOver = false;
+
+const suits = ["♠", "♥", "♦", "♣"];
+const ranks = ["A","2","3","4","5","6","7","8","9","10","J","Q","K"];
+
+function createDeck() {
+    let cards = [];
+
+    suits.forEach(suit => {
+        ranks.forEach((rank, index) => {
+            cards.push({
+                suit,
+                rank,
+                value: index + 1
+            });
+        });
+    });
+
+    return cards;
+}
+
+function shuffle(cards) {
+    for (let i = cards.length - 1; i > 0; i--) {
+        let j = Math.floor(Math.random() * (i + 1));
+        [cards[i], cards[j]] = [cards[j], cards[i]];
+    }
+    return cards;
+}
+
+function drawCard(card) {
+    let color = ["♥","♦"].includes(card.suit) ? "red" : "";
+    return `<span class="playing-card ${color}">
+        ${card.rank}${card.suit}
+    </span>`;
+}
+
+function startGame(name) {
+    currentGame = name;
+    document.getElementById("menu").style.display = "none";
+    document.getElementById("gameScreen").style.display = "block";
+
+    document.getElementById("gameTitle").textContent = name;
+    document.getElementById("gameDescription").textContent =
+        "Enjoy a classic game of " + name + "!";
+
+    newGame();
+}
+
+function backToMenu() {
+    document.getElementById("menu").style.display = "block";
+    document.getElementById("gameScreen").style.display = "none";
+}
+
+function newGame() {
+    deck = shuffle(createDeck());
+    player = [];
+    dealer = [];
+    gameOver = false;
+
+    if (currentGame === "Blackjack") blackjack();
+    else if (currentGame === "War") war();
+    else if (currentGame === "Go Fish") goFish();
+    else if (currentGame === "Crazy Eights") crazyEights();
+    else if (currentGame === "Old Maid") oldMaid();
+    else solitaire();
+}
+
+// BLACKJACK
+
+function cardValue(card) {
+    if (["J","Q","K"].includes(card.rank)) return 10;
+    if (card.rank === "A") return 11;
+    return card.value;
+}
+
+function handValue(hand) {
+    let total = hand.reduce((sum, card) => sum + cardValue(card), 0);
+    let aces = hand.filter(card => card.rank === "A").length;
+
+    while (total > 21 && aces > 0) {
+        total -= 10;
+        aces--;
+    }
+
+    return total;
+}
+
+function blackjack() {
+    player = [deck.pop(), deck.pop()];
+    dealer = [deck.pop(), deck.pop()];
+    showBlackjack();
+}
+
+function showBlackjack() {
+    document.getElementById("gameArea").innerHTML = `
+        <h3>Dealer (${gameOver ? handValue(dealer) : "?"})</h3>
+        ${dealer.map((c,i) =>
+            drawCard(c) 
+        ).join("")}
+
+        <br><br>
+        <h3>Your hand (${handValue(player)})</h3>
+        ${player.map(drawCard).join("")}
+    `;
+
+    if (gameOver) {
+        let p = handValue(player);
+        let d = handValue(dealer);
+
+        document.getElementById("status").textContent =
+            p > 21 ? "You busted! Dealer wins." :
+            d > 21 || p > d ? "You win!" :
+            p === d ? "It's a tie!" : "Dealer wins!";
+    }
+
+    document.getElementById("controls").innerHTML = gameOver
+        ? `<button onclick="newGame()">Play Again</button>`
+        : `<button onclick="hit()">Hit</button>
+           <button onclick="stand()">Stand</button>`;
+}
+
+function hit() {
+    if (gameOver) return;
+    player.push(deck.pop());
+
+    if (handValue(player) >= 21) stand();
+    else showBlackjack();
+}
+
+function stand() {
+    if (gameOver) return;
+    while (handValue(dealer) < 17) {
+        dealer.push(deck.pop());
+    }
+
+    gameOver = true;
+    showBlackjack();
+}
+
+// WAR
+
+function war() {
+    player = deck.splice(0,26);
+    dealer = deck.splice(0,26);
+    showWar();
+}
+
+function showWar() {
+    if (!player.length || !dealer.length) {
+        document.getElementById("status").textContent =
+            player.length ? "You win the game!" : "Dealer wins the game!";
+        document.getElementById("gameArea").innerHTML = "";
+        document.getElementById("controls").innerHTML =
+            `<button onclick="newGame()">Play Again</button>`;
+        return;
+    }
+
+    document.getElementById("gameArea").innerHTML = `
+        <h3>Your cards: ${player.length}</h3>
+        <br>
+        <h3>Dealer's cards: ${dealer.length}</h3>
+    `;
+
+    document.getElementById("controls").innerHTML =
+        `<button onclick="playWar()">Play Round</button>`;
+}
+
+function playWar() {
+    if (!player.length || !dealer.length) return;
+
+    let a = player.shift();
+    let b = dealer.shift();
+
+    let av = a.value;
+    let bv = b.value;
+
+    document.getElementById("gameArea").innerHTML = `
+        <h3>Your card</h3>${drawCard(a)}
+        <h3>Dealer's card</h3>${drawCard(b)}
+    `;
+
+    if (av > bv) {
+        player.push(a,b);
+        document.getElementById("status").textContent = "You win this round!";
+    } else if (bv > av) {
+        dealer.push(a,b);
+        document.getElementById("status").textContent = "Dealer wins this round!";
+    } else {
+        document.getElementById("status").textContent = "Tie! Cards returned to the deck.";
+        player.push(a);
+        dealer.push(b);
+    }
+
+    document.getElementById("controls").innerHTML =
+        `<button onclick="showWar()">Continue</button>`;
+}
+
+// GO FISH
+
+function goFish() {
+    player = deck.splice(0,7);
+    dealer = deck.splice(0,7);
+    showFish();
+}
+
+function showFish() {
+    document.getElementById("gameArea").innerHTML = `
+        <h3>Your hand</h3>
+        ${player.map(drawCard).join("")}
+        <br><br>
+        <h3>Computer's cards: ${dealer.length}</h3>
+        <h3>Deck: ${deck.length}</h3>
+    `;
+
+    document.getElementById("controls").innerHTML =
+        player.map((c,i) =>
+            `<button onclick="askFish(${i})">${c.rank}</button>`
+        ).join("");
+
+    document.getElementById("status").textContent =
+        "Choose a rank to ask the computer for.";
+}
+
+function askFish(index) {
+    let rank = player[index].rank;
+    let matches = dealer.filter(c => c.rank === rank);
+
+    if (matches.length) {
+        player.push(...matches);
+        dealer = dealer.filter(c => c.rank !== rank);
+        document.getElementById("status").textContent = "You got a match!";
+    } else if (deck.length) {
+        player.push(deck.pop());
+        document.getElementById("status").textContent = "Go Fish! You drew a card.";
+    }
+
+    if (!dealer.length || !deck.length) {
+        document.getElementById("status").textContent = "Round finished!";
+    }
+
+    showFish();
+}
+
+// CRAZY EIGHTS
+
+let topCard;
+
+function crazyEights() {
+    player = deck.splice(0,7);
+    dealer = deck.splice(0,7);
+    topCard = deck.pop();
+    showCrazy();
+}
+
+function showCrazy() {
+    document.getElementById("gameArea").innerHTML = `
+        <h3>Top Card</h3>
+        ${drawCard(topCard)}
+        <br><br>
+        <h3>Your hand</h3>
+        ${player.map(drawCard).join("")}
+    `;
+
+    document.getElementById("controls").innerHTML =
+        player.map((c,i) =>
+            `<button onclick="playCrazy(${i})">${c.rank}${c.suit}</button>`
+        ).join("") +
+        `<button onclick="drawCrazy()">Draw Card</button>`;
+}
+
+function playCrazy(index) {
+    let c = player[index];
+
+    if (c.rank !== "8" &&
+        c.suit !== topCard.suit &&
+        c.rank !== topCard.rank) {
+        document.getElementById("status").textContent =
+            "Choose a matching suit, rank, or an eight!";
+        return;
+    }
+
+    topCard = player.splice(index,1)[0];
+    document.getElementById("status").textContent = "Card played!";
+
+    if (!player.length) {
+        document.getElementById("status").textContent = "You win!";
+        gameOver = true;
+    }
+
+    showCrazy();
+}
+
+function drawCrazy() {
+    if (deck.length) player.push(deck.pop());
+    showCrazy();
+}
+
+// OLD MAID
+
+function oldMaid() {
+    player = deck.slice(0,25);
+    dealer = deck.slice(25,50);
+
+    // Remove one matching card to create an unmatched card.
+    let unmatched = player.pop();
+
+    dealer = dealer.filter(c =>
+        !(c.rank === unmatched.rank && c.suit === unmatched.suit)
+    );
+
+    player.push(...deck.slice(50,51));
+    showOldMaid();
+}
+
+function showOldMaid() {
+    document.getElementById("gameArea").innerHTML = `
+        <h3>Your hand</h3>
+        ${player.map(drawCard).join("")}
+        <br><br>
+        <h3>Computer's cards: ${dealer.length}</h3>
+    `;
+
+    document.getElementById("controls").innerHTML =
+        `<button onclick="drawOldMaid()">Draw From Computer</button>`;
+}
+
+function drawOldMaid() {
+    if (!dealer.length) return;
+
+    let i = Math.floor(Math.random() * dealer.length);
+    player.push(dealer.splice(i,1)[0]);
+
+    document.getElementById("status").textContent =
+        "You drew a card!";
+
+    showOldMaid();
+}
+
+// SOLITAIRE (BASIC CARD DEMO)
+
+function solitaire() {
+    player = deck.splice(0,28);
+
+    document.getElementById("gameArea").innerHTML = `
+        <h3>Stock pile</h3>
+        ${drawCard(deck[0])}
+        <br><br>
+        <h3>Your cards</h3>
+        ${player.slice(0,7).map(drawCard).join("")}
+    `;
+
+    document.getElementById("controls").innerHTML =
+        `<button onclick="newGame()">Restart Solitaire</button>`;
+
+    document.getElementById("status").textContent =
+        "Solitaire preview. Full Klondike rules are not implemented yet.";
+}
+</script>
+
+</body>
+</html>
