@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cardhouse Arcade</title>
+<style>
+:root{--bg:#171311;--panel:#241d19;--panel2:#30251e;--gold:#d7b36a;--gold2:#f0d69a;--felt:#174b36;--muted:#b9aaa0;--line:#5a4633;--red:#b83232}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#30241c 0,#171311 58%);color:#f7f0e5;font-family:Georgia,"Times New Roman",serif;min-height:100vh}
+button{font:inherit;cursor:pointer;border:1px solid #9b7942;border-radius:8px;padding:10px 15px;background:linear-gradient(#e4c47e,#c49a4c);color:#24190d;font-weight:bold}
+button:hover{filter:brightness(1.1);transform:translateY(-1px)}button:disabled{opacity:.45;cursor:not-allowed;transform:none}
+header{height:auto;min-height:76px;padding:15px clamp(16px,5vw,64px);display:flex;align-items:center;justify-content:space-between;gap:15px;border-bottom:1px solid var(--line);background:#15110fdd;position:sticky;top:0;z-index:5;backdrop-filter:blur(10px)}
+.brand{font-size:25px;letter-spacing:2px;color:var(--gold2);font-weight:bold}.brand small{display:block;font:10px Arial,sans-serif;letter-spacing:4px;color:var(--muted);margin-top:4px}
+.wallet{display:flex;align-items:center;gap:12px;background:#2b211a;border:1px solid var(--line);border-radius:10px;padding:9px 13px}.wallet strong{color:var(--gold2);font: bold 18px Arial,sans-serif}.wallet span{font:11px Arial,sans-serif;color:var(--muted)}
+main{max-width:1250px;margin:auto;padding:25px clamp(14px,4vw,45px) 50px}
+.hero{text-align:center;padding:40px 10px 32px}.eyebrow{color:var(--gold);font:11px Arial,sans-serif;letter-spacing:4px;text-transform:uppercase}.hero h1{font-size:clamp(34px,6vw,58px);margin:12px 0;color:#fff4df}.hero h1 span{color:var(--gold2)}.hero p{color:var(--muted);font:15px Arial,sans-serif;line-height:1.6}.ornament{color:var(--gold);margin:18px auto;font-size:20px}
+.section-head{display:flex;justify-content:space-between;align-items:end;gap:15px;margin:26px 0 15px}.section-head h2{margin:0;color:var(--gold2);font-size:25px}.section-head p{margin:5px 0 0;color:var(--muted);font:12px Arial,sans-serif}
+.games{display:grid;grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:18px}
+.game-card{background:linear-gradient(145deg,#30251e,#211a16);border:1px solid var(--line);border-radius:13px;overflow:hidden;transition:.2s;box-shadow:0 9px 22px #0003}.game-card:hover{transform:translateY(-4px);border-color:var(--gold)}
+.card-art{height:125px;display:grid;place-items:center;background:radial-gradient(circle,#31523d,#173525 70%,#10271c);font-size:58px;color:var(--gold2);text-shadow:0 4px 12px #0008;border-bottom:1px solid #705532}
+.game-card:nth-child(3n+2) .card-art{background:radial-gradient(circle,#613b31,#351d1b 75%,#211412)}
+.game-card:nth-child(3n) .card-art{background:radial-gradient(circle,#59472c,#302316 75%,#1b1710)}
+.card-body{padding:18px}.card-body h3{font-size:22px;margin:0 0 8px;color:#fff0d6}.card-body p{font:13px/1.5 Arial,sans-serif;color:var(--muted);min-height:39px;margin:0 0 15px}.card-body button{width:100%}
+.pill{display:inline-block;border:1px solid #8b6b3c;color:var(--gold2);border-radius:30px;padding:4px 9px;font:10px Arial,sans-serif;letter-spacing:1px;margin-bottom:10px}
+.panel{background:linear-gradient(145deg,#2b211b,#201915);border:1px solid var(--line);border-radius:13px;padding:18px;margin-top:22px}
+.panel h2{color:var(--gold2);margin:0 0 8px}.panel p{color:var(--muted);font:13px/1.5 Arial,sans-serif}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.shop-items{display:flex;flex-wrap:wrap;gap:10px}.shop-item{background:#191512;border:1px solid var(--line);padding:12px;border-radius:9px;min-width:150px;flex:1}.shop-item strong{display:block;color:var(--gold2);margin-bottom:5px}.shop-item small{display:block;color:var(--muted);font:12px Arial,sans-serif;margin-bottom:10px}
+#gameScreen{display:none} .game-top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:18px}.game-top h1{color:var(--gold2);margin:0;font-size:32px}.game-top .actions{display:flex;gap:8px;flex-wrap:wrap}
+.table{background:radial-gradient(ellipse at center,#216345,#12432f 72%,#0c3021);border:9px solid #543922;border-radius:24px;min-height:430px;padding:22px;box-shadow:inset 0 0 35px #0006,0 12px 30px #0005}
+#board{text-align:center;min-height:260px}.status{text-align:center;color:#ffe4ad;min-height:28px;margin:14px 0;font:15px Arial,sans-serif}.controls{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}.controls button.secondary{background:#33271f;color:#f1dfbf;border-color:#8b6b3c}.controls button:focus-visible{outline:3px solid white;outline-offset:2px}
+.hand{display:flex;justify-content:center;align-items:flex-start;flex-wrap:wrap;gap:5px;margin:12px auto}.playing-card{width:58px;height:82px;background:#fffaf0;color:#171411;border-radius:7px;border:1px solid #d7cbb8;display:inline-flex;align-items:center;justify-content:center;font:bold 21px Arial,sans-serif;box-shadow:0 3px 8px #0005;margin:3px;cursor:pointer;user-select:none}.playing-card.red{color:#b32626}.playing-card.back{background:repeating-linear-gradient(45deg,#1d3450,#1d3450 5px,#29496c 5px,#29496c 10px);border:3px solid #eee;color:#f4d99b}.playing-card.selected{outline:4px solid var(--gold2);transform:translateY(-6px)}
+.muted{color:#d5e0d7;font:13px Arial,sans-serif}.columns{display:flex;justify-content:center;gap:7px;align-items:flex-start;overflow-x:auto;padding:8px 0}.column{width:65px;min-width:65px;min-height:115px;display:flex;flex-direction:column;align-items:center}.column .playing-card{margin:0 0 -49px;width:55px;height:78px}.column .playing-card:last-child{margin-bottom:0}.slot{width:58px;height:82px;border:2px dashed #b3c9b9;border-radius:7px;display:grid;place-items:center;color:#d3e0d5;margin:3px}
+.statline{font:12px Arial,sans-serif;color:#d8e2d9;margin:12px}
+.number-grid{display:grid;grid-template-columns:repeat(6,minmax(35px,1fr));gap:5px;max-width:510px;margin:15px auto}.number-grid button{padding:10px 3px;background:#214b37;color:white;border-color:#a58a55}.number-grid button.rednum{background:#9d2929}.number-grid button.blacknum{background:#202020}.number-grid button.greennum{background:#17683e}
+footer{text-align:center;color:#8f8074;font:11px Arial,sans-serif;letter-spacing:1px;padding:28px}
+@media(max-width:650px){header{align-items:flex-start}.brand{font-size:20px}.wallet{padding:7px}.wallet strong{font-size:15px}.two-col{grid-template-columns:1fr}.table{padding:12px;border-width:5px}.playing-card{width:46px;height:68px;font-size:17px}.column{width:49px;min-width:49px}.column .playing-card{width:44px;height:64px;margin-bottom:-40px}.hero{padding-top:28px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">♠ CARDHOUSE <small>THE CLASSIC ARCADE</small></div>
+  <div class="wallet"><div><span>VIRTUAL TOKEN WALLET</span><br><strong id="balance">1,000</strong> <span>✦ TOKENS</span></div></div>
+</header>
+
+<main id="home">
+  <section class="hero">
+    <div class="eyebrow">Est. 2026 · The Cardhouse Collection</div>
+    <h1>Take Your <span>Seat</span></h1>
+    <p>Classic card tables, familiar favorites, and a little friendly competition.<br>Play for fun. Tokens are virtual arcade points only.</p>
+    <div class="ornament">✦ ━━━━━━━━━ ✦</div>
+  </section>
+
+  <div class="section-head"><div><h2>The Game Room</h2><p>Choose a table to begin playing.</p></div><span class="pill">8 GAMES</span></div>
+  <section class="games">
+    <article class="game-card"><div class="card-art">♠ ♥</div><div class="card-body"><span class="pill">CARD CLASSIC</span><h3>Blackjack</h3><p>Play against the dealer. Get as close to 21 as you can without going over.</p><button onclick="startGame('blackjack')">Take a Seat →</button></div></article>
+    <article class="game-card"><div class="card-art">◉</div><div class="card-body"><span class="pill">SPIN & DISCOVER</span><h3>Roulette Wheel</h3><p>Spin the wheel and see where it lands. No wagers or token stakes.</p><button onclick="startGame('roulette')">Spin the Wheel →</button></div></article>
+    <article class="game-card"><div class="card-art">🂡</div><div class="card-body"><span class="pill">CARD CLASSIC</span><h3>Poker Showdown</h3><p>Build the best five-card hand in a friendly showdown against the computer.</p><button onclick="startGame('poker')">Play Poker →</button></div></article>
+    <article class="game-card"><div class="card-art">⚔</div><div class="card-body"><span class="pill">QUICK MATCH</span><h3>War</h3><p>Flip cards against the computer. The higher card takes the round.</p><button onclick="startGame('war')">Play War →</button></div></article>
+    <article class="game-card"><div class="card-art">🐟</div><div class="card-body"><span class="pill">FAMILY FAVORITE</span><h3>Go Fish</h3><p>Ask for ranks, collect sets, and try to finish with the most books.</p><button onclick="startGame('gofish')">Play Go Fish →</button></div></article>
+    <article class="game-card"><div class="card-art">♥</div><div class="card-body"><span class="pill">QUICK MATCH</span><h3>Crazy Eights</h3><p>Match the suit or rank, play an eight, and empty your hand first.</p><button onclick="startGame('crazy')">Play Crazy Eights →</button></div></article>
+    <article class="game-card"><div class="card-art">🃏</div><div class="card-body"><span class="pill">FAMILY FAVORITE</span><h3>Old Maid</h3><p>Pair up matching ranks and avoid being left with the unmatched queen.</p><button onclick="startGame('maid')">Play Old Maid →</button></div></article>
+    <article class="game-card"><div class="card-art">♦</div><div class="card-body"><span class="pill">SOLO TABLE</span><h3>Solitaire</h3><p>Play Klondike Solitaire. Build the four foundations from ace to king.</p><button onclick="startGame('solitaire')">Play Solitaire →</button></div></article>
+  </section>
+
+  <section class="two-col">
+    <div class="panel">
+      <h2>✦ Token Challenges</h2>
+      <p>Optional arcade challenges use a fixed token unlock cost. Completing the challenge earns a set reward. No random token payouts, wagering, or real-money value.</p>
+      <div class="shop-items">
+        <div class="shop-item"><strong>Blackjack Practice</strong><small>Unlock: 50 tokens · Reward: 75 tokens</small><button onclick="challenge('blackjack')">Unlock Challenge</button></div>
+        <div class="shop-item"><strong>Card Collector</strong><small>Unlock: 30 tokens · Reward: 50 tokens</small><button onclick="challenge('war')">Unlock Challenge</button></div>
+      </div>
+      <p id="challengeNote" aria-live="polite"></p>
+    </div>
+    <div class="panel">
+      <h2>✦ The Token Shop</h2>
+      <p>Spend earned tokens on table decorations. Purchases are cosmetic and never affect game results.</p>
+      <div class="shop-items">
+        <div class="shop-item"><strong>Ruby Table</strong><small>Red felt theme · 100 tokens</small><button onclick="buyTheme('ruby',100)">Unlock</button></div>
+        <div class="shop-item"><strong>Midnight Table</strong><small>Dark blue theme · 150 tokens</small><button onclick="buyTheme('midnight',150)">Unlock</button></div>
+      </div>
+      <p id="shopNote" aria-live="polite"></p>
+    </div>
+  </section>
+  <section class="panel">
+    <h2>How tokens work</h2>
+    <p>Start with 1,000 virtual tokens. Earn fixed rewards for completing games and optional challenges. Use tokens for cosmetic items. Tokens are non-purchasable, non-transferable, non-redeemable, and have no cash value. Classic Mode is always free to play.</p>
+  </section>
+</main>
+
+<main id="gameScreen">
+  <div class="game-top"><div><div class="eyebrow">CARDHOUSE TABLE</div><h1 id="gameTitle">Game</h1></div><div class="actions"><button class="secondary" onclick="goHome()">← Game Room</button><button onclick="restartGame()">↻ Restart</button></div></div>
+  <div class="table"><div id="board"></div><div class="status" id="status" aria-live="polite"></div><div class="controls" id="controls"></div></div>
+  <p class="muted" style="text-align:center;margin-top:15px">Classic Mode · No tokens required to play</p>
+</main>
+<footer>CARDHOUSE ARCADE · VIRTUAL TOKENS HAVE NO CASH VALUE</footer>
+
+<script>
+const SUITS=['♠','♥','♦','♣'], RANKS=['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
+let tokens=Number(localStorage.getItem('cardhouseTokens')||1000),owned=JSON.parse(localStorage.getItem('cardhouseThemes')||'[]'),activeTheme='classic';
+let game='',deck=[],hand=[],dealer=[],st={},rewarded=false,activeChallenge=null;
+const $=id=>document.getElementById(id);
+function saveWallet(){localStorage.setItem('cardhouseTokens',tokens);$('balance').textContent=tokens.toLocaleString();}
+function setStatus(t){$('status').textContent=t}
+function setBoard(t){$('board').innerHTML=t}
+function setControls(t){$('controls').innerHTML=t}
+function makeDeck(){let d=[];SUITS.forEach(s=>RANKS.forEach((r,i)=>d.push({s,r,v:i+1})));return d}
+function shuffle(d){for(let i=d.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[d[i],d[j]]=[d[j],d[i]]}return d}
+function red(c){return c.s==='♥'||c.s==='♦'}
+function face(c,click='',small=false){return `<span class="playing-card ${red(c)?'red':''} ${small?'small':''}" ${click?`onclick="${click}"`:''}>${c.r}${c.s}</span>`}
+function back(){return '<span class="playing-card back">✦</span>'}
+function btn(t,fn){return `<button onclick="${fn}">${t}</button>`}
+function startGame(g){game=g;$('home').style.display='none';$('gameScreen').style.display='block';$('gameTitle').textContent=({blackjack:'Blackjack',roulette:'Roulette Wheel',poker:'Poker Showdown',war:'War',gofish:'Go Fish',crazy:'Crazy Eights',maid:'Old Maid',solitaire:'Solitaire'})[g];restartGame()}
+function goHome(){$('gameScreen').style.display='none';$('home').style.display='block';saveWallet()}
+function restartGame(){deck=shuffle(makeDeck());hand=[];dealer=[];st={};rewarded=false;if(game==='blackjack')bjStart();if(game==='roulette')rouletteStart();if(game==='poker')pokerStart();if(game==='war')warStart();if(game==='gofish')fishStart();if(game==='crazy')crazyStart();if(game==='maid')maidStart();if(game==='solitaire')solStart()}
+function reward(n,why){if(rewarded)return;rewarded=true;let total=n,extra='';if(activeChallenge&&activeChallenge.game===game){total+=activeChallenge.reward;extra=` Challenge completed: +${activeChallenge.reward} bonus tokens!`;activeChallenge=null;$('challengeNote').textContent='Challenge completed! Your bonus has been added.'}tokens+=total;saveWallet();setStatus(why+` +${n} tokens earned.`+extra)}
+function challenge(g){const cost=g==='blackjack'?50:30,rewardAmount=g==='blackjack'?75:50;if(tokens<cost){$('challengeNote').textContent='Not enough tokens to unlock this challenge.';return}if(activeChallenge){$('challengeNote').textContent='Finish or restart your current challenge first.';return}tokens-=cost;saveWallet();activeChallenge={game:g,reward:rewardAmount};$('challengeNote').textContent='Challenge unlocked! Now win a '+(g==='blackjack'?'Blackjack hand':'War match')+' in the Game Room. The fixed bonus will be added automatically.'}
+function buyTheme(name,cost){if(owned.includes(name)){$('shopNote').textContent='Already unlocked!';return}if(tokens<cost){$('shopNote').textContent='Not enough tokens.';return}tokens-=cost;owned.push(name);localStorage.setItem('cardhouseThemes',JSON.stringify(owned));saveWallet();$('shopNote').textContent=name+' table theme unlocked!'}
+saveWallet();
+
+// BLACKJACK
+function bjStart(){hand=[deck.pop(),deck.pop()];dealer=[deck.pop(),deck.pop()];st.over=false;bjRender('Choose Hit or Stand.')}
+function bjVal(c){return c.r==='A'?11:['J','Q','K'].includes(c.r)?10:c.v}
+function bjTotal(h){let n=h.reduce((a,c)=>a+bjVal(c),0),a=h.filter(c=>c.r==='A').length;while(n>21&&a-->0)n-=10;return n}
+function bjRender(msg){setBoard(`<h3>Dealer · ${st.over?bjTotal(dealer):'?'}</h3><div class="hand">${dealer.map((c,i)=>!st.over&&i===1?back():face(c,'',true)).join('')}</div><h3>Your hand · ${bjTotal(hand)}</h3><div class="hand">${hand.map(c=>face(c,'',true)).join('')}</div>`);setStatus(msg);if(st.over){let p=bjTotal(hand),d=bjTotal(dealer);if(p>21)setStatus('You bust. Dealer wins.');else if(d>21||p>d){reward(20,'You win the hand!');}else if(p===d)setStatus('Push — it is a tie.');else setStatus('Dealer wins this hand.');setControls(btn('Play Again','restartGame()'))}else setControls(btn('Hit','bjHit()')+btn('Stand','bjStand()'))}
+function bjHit(){if(st.over)return;hand.push(deck.pop());if(bjTotal(hand)>=21)bjStand();else bjRender('Card drawn. Hit or stand?')}
+function bjStand(){if(st.over)return;while(bjTotal(dealer)<17)dealer.push(deck.pop());st.over=true;bjRender('Round complete.')}
+
+// ROULETTE - wheel simulator only; no wagers or token stakes.
+function rouletteStart(){st.spins=0;rouletteRender('Press Spin to see where the wheel lands.')}
+function rouletteRender(msg){setBoard(`<div style="font-size:90px;margin:18px">🎡</div><h2>European Wheel · 0–36</h2><p class="muted">Spin the wheel for fun. No bets or token stakes.</p><div class="statline">Spins this session: ${st.spins}</div>`);setStatus(msg);setControls(btn('Spin Wheel','spinWheel()')+btn('Reset Spins','restartGame()'))}
+function spinWheel(){let n=Math.floor(Math.random()*37),color=n===0?'Green':([1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36].includes(n)?'Red':'Black');st.spins++;rouletteRender(`The wheel landed on ${n} · ${color}.`);}
+
+// POKER SHOWDOWN - 5-card draw showdown, no betting.
+function pokerStart(){hand=deck.splice(0,5);dealer=deck.splice(0,5);st.revealed=false;pokerRender('Your five-card hand is ready. Reveal the computer hand when you are ready.')}
+function pokerRank(h){let vals=h.map(c=>c.v===1?14:c.v).sort((a,b)=>b-a),counts={};h.forEach(c=>counts[c.v]=(counts[c.v]||0)+1);let groups=Object.entries(counts).map(([v,n])=>({v:+v===1?14:+v,n})).sort((a,b)=>b.n-a.n||b.v-a.v);let flush=h.every(c=>c.s===h[0].s),unique=[...new Set(vals)],straight=unique.length===5&&unique[0]-unique[4]===4;let wheel=unique.join(',')==='14,5,4,3,2';if(straight&&flush)return [8,unique[0]===14&&wheel?5:vals[0]];if(groups[0].n===4)return [7,groups[0].v,groups[1].v];if(groups[0].n===3&&groups[1].n===2)return [6,groups[0].v,groups[1].v];if(flush)return [5,...vals];if(straight||wheel)return [4,wheel?5:vals[0]];if(groups[0].n===3)return [3,...groups.map(x=>x.v)];if(groups[0].n===2&&groups[1].n===2)return [2,Math.max(groups[0].v,groups[1].v),Math.min(groups[0].v,groups[1].v),groups[2].v];if(groups[0].n===2)return [1,...groups.map(x=>x.v)];return [0,...vals]}
+const HAND_NAMES=['High card','One pair','Two pair','Three of a kind','Straight','Flush','Full house','Four of a kind','Straight flush'];
+function cmp(a,b){for(let i=0;i<Math.max(a.length,b.length);i++){if((a[i]||0)!==(b[i]||0))return (a[i]||0)>(b[i]||0)?1:-1}return 0}
+function pokerRender(msg){setBoard(`<h3>Your hand · ${HAND_NAMES[pokerRank(hand)[0]]}</h3><div class="hand">${hand.map(c=>face(c,'',true)).join('')}</div><h3>Computer</h3><div class="hand">${st.revealed?dealer.map(c=>face(c,'',true)).join(''):Array(5).fill(back()).join('')}</div>${st.revealed?`<p class="muted">Computer hand: ${HAND_NAMES[pokerRank(dealer)[0]]}</p>`:''}`);setStatus(msg);setControls(st.revealed?btn('Deal Again','restartGame()'):btn('Reveal Showdown','pokerReveal()'))}
+function pokerReveal(){st.revealed=true;let c=cmp(pokerRank(hand),pokerRank(dealer));if(c>0){pokerRender('You win the showdown!');reward(25,'Poker showdown won!')}else if(c===0)pokerRender('Tie game!');else pokerRender('Computer wins this showdown.');}
+
+// WAR
+function warStart(){hand=deck.splice(0,26);dealer=deck.splice(0,26);st.round=0;warRender('Press Play Round.')}
+function warRender(msg){setBoard(`<h3>Your deck: ${hand.length} cards</h3><div class="hand">${back()}</div><h3>Computer deck: ${dealer.length} cards</h3><div class="hand">${back()}</div>`);setStatus(msg);if(!hand.length||!dealer.length){if(hand.length)reward(20,'You won the war!');else setStatus('Computer won the war.');setControls(btn('Play Again','restartGame()'))}else setControls(btn('Play Round','warRound()'))}
+function warRound(){if(!hand.length||!dealer.length)return;let a=hand.shift(),b=dealer.shift(),pot=[a,b];while(a.v===b.v&&hand.length>1&&dealer.length>1){pot.push(hand.shift(),dealer.shift());a=hand.shift();b=dealer.shift();pot.push(a,b)}if(a.v>b.v)hand.push(...pot);else if(b.v>a.v)dealer.push(...pot);else{hand.push(...pot.filter((_,i)=>i%2===0));dealer.push(...pot.filter((_,i)=>i%2===1))}setBoard(`<h3>Your card</h3>${face(a)}<h3>Computer card</h3>${face(b)}`);warRender(a.v>b.v?'You won the round!':a.v<b.v?'Computer won the round.':'Tie — cards split.');}
+
+// GO FISH
+function fishStart(){hand=deck.splice(0,7);dealer=deck.splice(0,7);st.books=0;st.cpuBooks=0;fishBooks(hand,'you');fishBooks(dealer,'cpu');fishRender('Choose a rank to ask the computer for.')}
+function fishBooks(h,who){let tally={};h.forEach(c=>tally[c.r]=(tally[c.r]||0)+1);for(let r of Object.keys(tally)){if(tally[r]===4){for(let i=0;i<4;i++)h.splice(h.findIndex(c=>c.r===r),1);if(who==='you')st.books++;else st.cpuBooks++}}}
+function fishRender(msg){setBoard(`<h3>Your hand · ${hand.length} cards</h3><div class="hand">${hand.map((c,i)=>face(c,`fishAsk(${i})`,true)).join('')}</div><h3>Computer · ${dealer.length} cards</h3><div class="hand">${dealer.length?back():''}</div><p class="muted">Books: You ${st.books} · Computer ${st.cpuBooks} · Deck ${deck.length}</p>`);setStatus(msg);if(!deck.length&&(!hand.length||!dealer.length)){if(st.books>st.cpuBooks)reward(20,'You won Go Fish!');else setStatus(st.books===st.cpuBooks?'Go Fish ended in a tie.':'Computer won Go Fish.');setControls(btn('Play Again','restartGame()'))}else setControls('')}
+function fishAsk(i){if(!hand[i])return;let r=hand[i].r,m=dealer.filter(c=>c.r===r);if(m.length){hand.push(...m);dealer=dealer.filter(c=>c.r!==r);fishBooks(hand,'you');fishRender('The computer had that rank! Ask again.');return}if(deck.length)hand.push(deck.pop());fishRender('Go Fish! You drew a card.');setTimeout(fishCPU,700)}
+function fishCPU(){if(!dealer.length&&deck.length)dealer.push(deck.pop());if(!dealer.length){fishRender('Your turn.');return}let r=dealer[Math.floor(Math.random()*dealer.length)].r,m=hand.filter(c=>c.r===r);if(m.length){dealer.push(...m);hand=hand.filter(c=>c.r!==r);fishBooks(dealer,'cpu');fishRender('Computer collected a set. Your turn.')}else{if(deck.length)dealer.push(deck.pop());fishRender('Computer went fishing. Your turn.') }}
+
+// CRAZY EIGHTS
+function crazyStart(){hand=deck.splice(0,7);dealer=deck.splice(0,7);st.top=deck.pop();st.suit=st.top.s;st.turn='you';crazyRender('Match the suit or rank, or play an eight.')}
+function crazyLegal(c){return c.r==='8'||c.s===st.suit||c.r===st.top.r}
+function crazyRender(msg){setBoard(`<h3>Top card</h3>${face(st.top)}<p class="muted">Active suit: ${st.suit}</p><h3>Your hand · ${hand.length}</h3><div class="hand">${hand.map((c,i)=>face(c,`crazyPlay(${i})`,true)).join('')}</div><h3>Computer · ${dealer.length} cards</h3>${back()}`);setStatus(msg);setControls(st.turn==='you'?btn('Draw Card','crazyDraw()'):'')}
+function crazyPlay(i){if(st.turn!=='you'||!hand[i])return;let c=hand[i];if(!crazyLegal(c)){setStatus('That card does not match.');return}if(c.r==='8'){let s=prompt('Choose a suit: S, H, D, or C');let map={S:'♠',H:'♥',D:'♦',C:'♣'};if(!map[(s||'').toUpperCase()])return;st.suit=map[s.toUpperCase()]}else st.suit=c.s;st.top=hand.splice(i,1)[0];if(!hand.length){reward(20,'You emptied your hand!');setControls(btn('Play Again','restartGame()'));return}st.turn='cpu';crazyRender('Computer is thinking...');setTimeout(crazyCPU,650)}
+function crazyDraw(){if(deck.length)hand.push(deck.pop());st.turn='cpu';crazyRender('You drew a card. Computer turn.');setTimeout(crazyCPU,650)}
+function crazyCPU(){let i=dealer.findIndex(crazyLegal);if(i<0&&deck.length){dealer.push(deck.pop());i=dealer.findIndex(crazyLegal)}if(i>=0){let c=dealer.splice(i,1)[0];st.top=c;if(c.r==='8')st.suit=dealer[0]?.s||st.suit;else st.suit=c.s}if(!dealer.length){setStatus('Computer emptied its hand.');setControls(btn('Play Again','restartGame()'));return}st.turn='you';crazyRender(i<0?'Computer drew. Your turn.':'Computer played. Your turn.')}
+
+// OLD MAID
+function maidStart(){deck=shuffle(makeDeck().filter(c=>!(c.r==='Q'&&c.s==='♠')));hand=deck.splice(0,26);dealer=deck.splice(0,25);maidPairs(hand);maidPairs(dealer);maidRender('Choose a card from the computer.')}
+function maidPairs(h){let changed=true;while(changed){changed=false;outer:for(let i=0;i<h.length;i++)for(let j=i+1;j<h.length;j++)if(h[i].r===h[j].r){h.splice(j,1);h.splice(i,1);changed=true;break outer}}}
+function maidRender(msg){setBoard(`<h3>Your cards · ${hand.length}</h3><div class="hand">${hand.map((c,i)=>face(c,`maidPick(${i})`,true)).join('')}</div><h3>Computer cards · ${dealer.length}</h3><div class="hand">${dealer.length?back():''}</div>`);setStatus(msg);if(!hand.length||!dealer.length){setStatus(!hand.length?'You matched all your cards! You win!':'You are left holding the Old Maid. Computer wins.');if(!hand.length)reward(20,'Old Maid won!');setControls(btn('Play Again','restartGame()'))}else setControls('')}
+function maidPick(i){if(!dealer.length||!hand[i])return;let c=dealer.splice(Math.floor(Math.random()*dealer.length),1)[0];hand.push(c);maidPairs(hand);maidPairs(dealer);if(!hand.length||!dealer.length){maidRender('Game over.');return}maidRender('Computer is taking a turn...');setTimeout(()=>{let picked=hand.splice(Math.floor(Math.random()*hand.length),1)[0];dealer.push(picked);maidPairs(hand);maidPairs(dealer);maidRender('Your turn. Pick a card.')},650)}
+
+// KLONDIKE SOLITAIRE
+function solStart(){let d=shuffle(makeDeck());st.cols=[];st.found=[[],[],[],[]];st.stock=d;st.waste=[];st.sel=null;for(let i=0;i<7;i++){let col=[];for(let j=0;j<=i;j++){let c=d.pop();c.up=j===i;col.push(c)}st.cols.push(col)}solRender('Select a face-up card, then choose a destination.')}
+function solRender(msg){let h='<div class="hand"><div class="slot" onclick="solStock()">▤</div><div class="slot" onclick="solWaste()">'+(st.waste.length?st.waste.at(-1).r+st.waste.at(-1).s:'Waste')+'</div>';st.found.forEach((f,i)=>h+=`<div class="slot" onclick="solFoundation(${i})">${f.length?f.at(-1).r+f.at(-1).s:'A'}</div>`);h+='</div><div class="columns">';st.cols.forEach((col,i)=>{h+=`<div class="column" onclick="solColumn(${i})">`;if(!col.length)h+='<div class="slot">K</div>';col.forEach((c,j)=>h+=c.up?`<span class="playing-card ${red(c)?'red':''} ${st.sel&&st.sel.col===i&&st.sel.idx===j?'selected':''}" onclick="event.stopPropagation();solSelect(${i},${j})">${c.r}${c.s}</span>`:back());h+='</div>'});h+='</div>';setBoard(h);setStatus(msg);setControls(btn('Clear Selection','solClear()')+btn('New Deal','restartGame()'));if(st.found.every(f=>f.length===13)){reward(50,'Solitaire completed!')}}
+function solStock(){if(st.stock.length){let c=st.stock.pop();c.up=true;st.waste.push(c)}else if(st.waste.length){st.stock=st.waste.reverse();st.waste=[]}st.sel=null;solRender('Stock updated.')}
+function solClear(){st.sel=null;solRender('Selection cleared.')}
+function solSelect(col,idx){if(!st.cols[col][idx].up)return;if(st.sel){if(solMoveColumn(col))return}st.sel={col,idx};solRender('Card selected. Choose a column or foundation.')}
+function solWaste(){if(!st.waste.length)return;st.sel={waste:true};solRender('Waste card selected. Choose a destination.')}
+function solCards(){return !st.sel?[]:st.sel.waste?[st.waste.at(-1)]:st.cols[st.sel.col].slice(st.sel.idx)}
+function solMoveColumn(dest){let cards=solCards(),first=cards[0],target=st.cols[dest],last=target.at(-1);if(!first)return false;if(target.length===0?first.r!=='K':!last.up||red(last)===red(first)||last.v!==first.v+1)return false;if(st.sel.waste)st.waste.pop();else{let src=st.cols[st.sel.col];src.splice(st.sel.idx);if(src.length)src.at(-1).up=true}target.push(...cards);st.sel=null;solRender('Cards moved.');return true}
+function solColumn(i){if(st.sel)solMoveColumn(i)}
+function solFoundation(i){let cards=solCards();if(cards.length!==1)return;let c=cards[0],f=st.found[i],last=f.at(-1);if(f.length===0?c.r!=='A':c.s!==last.s||c.v!==last.v+1)return;if(st.sel.waste)st.waste.pop();else{let src=st.cols[st.sel.col];src.splice(st.sel.idx);if(src.length)src.at(-1).up=true}f.push(c);st.sel=null;solRender('Card moved to foundation.')}
+</script>
+</body>
+</html>
