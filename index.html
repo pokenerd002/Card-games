@@ -3,8 +3,9 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Cardhouse Arcade</title>
+
 <style>
 :root {
   --gold:#d5ad55;
@@ -15,103 +16,325 @@
   --felt:#174d36;
   --text:#f5f0df;
   --muted:#aaa994;
-  --red:#c94b48;
 }
 *{box-sizing:border-box}
 body{
-  margin:0;background:radial-gradient(ellipse at top,#263b2c,#101512 65%);
-  color:var(--text);font-family:Georgia,serif;min-height:100vh
+  margin:0;
+  background:radial-gradient(ellipse at top,#263b2c,#101512 70%);
+  color:var(--text);
+  font-family:Georgia,serif;
+  min-height:100vh;
 }
 header{
-  padding:28px 5%;display:flex;justify-content:space-between;
-  align-items:center;gap:15px;flex-wrap:wrap;border-bottom:1px solid #554728;
-  background:#101713eF
+  padding:25px 5%;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:15px;
+  border-bottom:1px solid #554728;
+  background:#101713;
 }
-.logo{font-size:32px;color:var(--gold-light);font-weight:bold;letter-spacing:3px}
-.logo span{color:var(--text);font-size:13px;display:block;letter-spacing:5px}
-.wallet{border:1px solid var(--gold);padding:10px 17px;border-radius:30px;color:var(--gold-light)}
-main{max-width:1250px;margin:auto;padding:30px 5% 70px}
+.logo{
+  font-size:30px;
+  color:var(--gold-light);
+  font-weight:bold;
+  letter-spacing:3px;
+}
+.logo span{
+  display:block;
+  font-size:12px;
+  letter-spacing:5px;
+  color:var(--text);
+}
+.wallet{
+  border:1px solid var(--gold);
+  padding:11px 18px;
+  border-radius:30px;
+  color:var(--gold-light);
+}
+main{
+  max-width:1250px;
+  margin:auto;
+  padding:30px 5% 70px;
+}
 h1,h2,h3{color:var(--gold-light)}
-h1{font-size:34px;margin-bottom:8px}
-.subtitle{color:var(--muted);margin-top:0;line-height:1.6}
-.section-title{margin:35px 0 18px;border-bottom:1px solid #554728;padding-bottom:10px}
+h1{font-size:35px;margin-bottom:8px}
+.subtitle{color:var(--muted);line-height:1.6}
+.section-title{
+  margin:35px 0 18px;
+  border-bottom:1px solid #554728;
+  padding-bottom:10px;
+}
 .games{
-  display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:20px
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+  gap:20px;
 }
 .game-card{
   background:linear-gradient(145deg,#26352a,#17221b);
-  border:1px solid #65532e;border-radius:15px;padding:22px;
-  min-height:220px;display:flex;flex-direction:column;transition:.2s
+  border:1px solid #65532e;
+  border-radius:15px;
+  padding:22px;
+  min-height:220px;
+  display:flex;
+  flex-direction:column;
+  transition:.2s;
 }
-.game-card:hover{transform:translateY(-4px);border-color:var(--gold)}
+.game-card:hover{
+  transform:translateY(-4px);
+  border-color:var(--gold);
+}
 .game-icon{font-size:43px;margin-bottom:10px}
 .game-card h3{margin:5px 0;font-size:23px}
 .game-card p{color:var(--muted);line-height:1.5;flex:1}
 button{
-  cursor:pointer;border:1px solid var(--gold);background:linear-gradient(#e4c576,#b68b37);
-  color:#20190c;font-weight:bold;padding:11px 17px;border-radius:8px;
-  font-family:inherit;font-size:15px
+  cursor:pointer;
+  border:1px solid var(--gold);
+  background:linear-gradient(#e4c576,#b68b37);
+  color:#20190c;
+  font-weight:bold;
+  padding:11px 17px;
+  border-radius:8px;
+  font-family:inherit;
+  font-size:15px;
 }
 button:hover{filter:brightness(1.12)}
 button:disabled{opacity:.4;cursor:not-allowed}
-button.secondary{background:#28372c;color:var(--text);border-color:#69765f}
-button.danger{background:#67312e;color:white;border-color:#a65a51}
+button.secondary{
+  background:#28372c;
+  color:var(--text);
+  border-color:#69765f;
+}
 button.small{padding:7px 11px;font-size:13px}
 .game-screen{
-  display:none;background:linear-gradient(145deg,#1c2921,#111a14);
-  border:1px solid #68552f;border-radius:17px;padding:25px;margin-top:25px
+  display:none;
+  background:linear-gradient(145deg,#1c2921,#111a14);
+  border:1px solid #68552f;
+  border-radius:17px;
+  padding:25px;
+  margin-top:25px;
 }
 .game-screen.active{display:block}
-.game-top{display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap}
-.table{
-  background:radial-gradient(ellipse,#216044,#103b29);
-  border:8px solid #563b24;border-radius:25px;padding:25px;
-  min-height:230px;margin:20px 0;text-align:center;
-  box-shadow:inset 0 0 25px #071b10
+.game-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:15px;
+  flex-wrap:wrap;
 }
-.hand{display:flex;justify-content:center;flex-wrap:wrap;gap:9px;margin:15px 0}
+.table{
+  background:radial-gradient(ellipse,var(--felt),#103b29);
+  border:8px solid #563b24;
+  border-radius:25px;
+  padding:22px;
+  min-height:230px;
+  margin:20px 0;
+  text-align:center;
+  box-shadow:inset 0 0 25px #071b10;
+  overflow:hidden;
+}
+.hand{
+  display:flex;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:9px;
+  margin:15px 0;
+}
 .playing-card{
-  width:65px;height:92px;background:#fffdf5;color:#171717;border-radius:7px;
-  display:flex;flex-direction:column;justify-content:space-between;
-  padding:7px;font-family:Arial,sans-serif;font-weight:bold;
-  box-shadow:0 3px 7px #0008;font-size:17px
+  width:65px;
+  height:92px;
+  background:#fffdf5;
+  color:#171717;
+  border-radius:7px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  padding:7px;
+  font-family:Arial,sans-serif;
+  font-weight:bold;
+  box-shadow:0 3px 7px #0008;
+  font-size:17px;
+  flex-shrink:0;
 }
 .playing-card.red{color:#c52832}
 .playing-card .center{font-size:25px;text-align:center}
 .playing-card.back{
-  background:repeating-linear-gradient(45deg,#1d3155,#1d3155 5px,#d3b66b 6px,#1d3155 8px);
-  border:3px solid white
+  background:repeating-linear-gradient(
+    45deg,#1d3155,#1d3155 5px,#d3b66b 6px,#1d3155 8px
+  );
+  border:3px solid white;
 }
-.playing-card .bottom{text-align:right;transform:rotate(180deg)}
-.status{color:var(--gold-light);font-size:18px;min-height:28px;margin:15px 0}
-.controls{display:flex;gap:9px;justify-content:center;flex-wrap:wrap;margin:15px 0}
-.info{color:var(--muted);font-size:14px;line-height:1.6}
+.playing-card .bottom{
+  text-align:right;
+  transform:rotate(180deg);
+}
+.status{
+  color:var(--gold-light);
+  font-size:18px;
+  min-height:28px;
+  margin:15px 0;
+}
 .score{color:var(--gold-light);font-size:18px}
-input,select{
-  background:#101a13;color:var(--text);border:1px solid #827044;
-  padding:10px;border-radius:7px;font:inherit
+.controls{
+  display:flex;
+  gap:9px;
+  justify-content:center;
+  flex-wrap:wrap;
+  margin:15px 0;
 }
-.shop-item{background:var(--panel2);padding:15px;border-radius:10px;border:1px solid #554728}
-.shop-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
-footer{text-align:center;color:var(--muted);padding:25px;border-top:1px solid #554728}
+.info{color:var(--muted);font-size:14px;line-height:1.6}
+input,select{
+  background:#101a13;
+  color:var(--text);
+  border:1px solid #827044;
+  padding:9px;
+  border-radius:7px;
+  font:inherit;
+  max-width:100%;
+}
+.shop-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:12px;
+}
+.shop-item{
+  background:var(--panel2);
+  padding:15px;
+  border-radius:10px;
+  border:1px solid #554728;
+}
+.roulette-layout{max-width:760px;margin:20px auto}
+.roulette-wheel{
+  font-size:75px;
+  display:inline-block;
+  margin:15px;
+}
+.roulette-wheel.spinning{animation:rouletteSpin 1.5s ease-in-out}
+@keyframes rouletteSpin{
+  from{transform:rotate(0deg)}
+  to{transform:rotate(1440deg)}
+}
+.roulette-grid{
+  display:grid;
+  grid-template-columns:42px repeat(12,minmax(18px,1fr));
+  gap:4px;
+  margin:18px auto;
+}
+.roulette-cell{
+  min-height:42px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border:1px solid #d5ad55;
+  border-radius:5px;
+  color:white;
+  font-weight:bold;
+  background:#171717;
+}
+.roulette-cell.red{background:#b52e36}
+.roulette-cell.black{background:#171717}
+.roulette-cell.green{background:#08733d}
+.roulette-cell.winner{
+  outline:3px solid #ffe28a;
+  box-shadow:0 0 15px #ffe28a;
+  transform:scale(1.05);
+  z-index:2;
+}
+.roulette-result{
+  font-size:26px;
+  color:var(--gold-light);
+  margin:15px;
+}
+.roulette-history{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:7px;
+}
+.roulette-history span{
+  border-radius:50%;
+  width:34px;
+  height:34px;
+  display:grid;
+  place-items:center;
+  font-weight:bold;
+  color:white;
+}
+.solitaire-columns{
+  display:grid;
+  grid-template-columns:repeat(7,minmax(35px,1fr));
+  gap:5px;
+  margin-top:15px;
+}
+.solitaire-column{
+  min-width:0;
+  min-height:110px;
+  border:1px dashed #ffffff66;
+  border-radius:6px;
+  padding:3px;
+  overflow:visible;
+}
+.solitaire-column .playing-card{
+  width:100%;
+  max-width:65px;
+  height:80px;
+  margin:0 auto;
+  font-size:12px;
+}
+.solitaire-column .playing-card .center{font-size:18px}
+.sol-card{
+  margin-top:-48px;
+  position:relative;
+}
+.sol-card:first-child{margin-top:0}
+.sol-card button{
+  display:block;
+  padding:0;
+  background:none;
+  border:0;
+}
+.sol-card.selected{
+  outline:3px solid var(--gold-light);
+  border-radius:7px;
+}
+footer{
+  text-align:center;
+  color:var(--muted);
+  padding:25px;
+  border-top:1px solid #554728;
+}
 @media(max-width:600px){
-  header{padding:20px}.logo{font-size:25px}main{padding:22px 4%}
+  header{padding:20px}
+  .logo{font-size:24px}
+  main{padding:22px 4%}
   .playing-card{width:53px;height:78px;font-size:14px}
   .playing-card .center{font-size:20px}
-  .table{padding:14px}
+  .table{padding:12px}
+  .roulette-grid{gap:2px}
+  .roulette-cell{min-height:32px;font-size:12px}
+  .solitaire-columns{gap:2px}
+  .solitaire-column .playing-card{height:65px;font-size:10px}
+  .sol-card{margin-top:-40px}
 }
 </style>
 </head>
+
 <body>
 
 <header>
-  <div class="logo">♠ CARDHOUSE <span>THE CLASSIC CARD ARCADE</span></div>
+  <div class="logo">
+    ♠ CARDHOUSE
+    <span>THE CLASSIC CARD ARCADE</span>
+  </div>
   <div class="wallet">✦ Tokens: <strong id="tokens">0</strong></div>
 </header>
 
 <main>
   <h1>Welcome to Cardhouse</h1>
-  <p class="subtitle">A collection of classic card games. Choose a table, learn the rules, and play.</p>
+  <p class="subtitle">
+    A collection of classic card games. Choose a table, learn the rules, and play.
+  </p>
 
   <h2 class="section-title">The Game Collection</h2>
   <div class="games" id="gameLibrary"></div>
@@ -124,39 +347,42 @@ footer{text-align:center;color:var(--muted);padding:25px;border-top:1px solid #5
       </div>
       <button class="secondary" onclick="closeGame()">← Game Library</button>
     </div>
+
     <div class="table" id="gameTable"></div>
     <div class="status" id="gameStatus" aria-live="polite"></div>
     <div class="controls" id="gameControls"></div>
-    <p class="info" id="gameInfo"></p>
+    <div class="info" id="gameInfo"></div>
   </section>
 
   <h2 class="section-title">Token Shop</h2>
-  <p class="subtitle">Earn fixed token rewards for winning games. Tokens have no cash value and cannot be wagered.</p>
+  <p class="subtitle">
+    Earn fixed rewards for winning games. Tokens have no cash value and cannot be wagered.
+  </p>
   <div class="shop-grid" id="shop"></div>
 
   <h2 class="section-title">Your Collection</h2>
-  <p class="info" id="collection">Default Gold Table</p>
+  <p class="info" id="collection"></p>
   <div class="controls">
     <button class="secondary small" onclick="resetProgress()">Reset Arcade Progress</button>
   </div>
 </main>
 
-<footer>♠ CARDHOUSE ♦ &nbsp; A classic card arcade</footer>
+<footer>♠ CARDHOUSE ♦ — A Classic Card Arcade</footer>
 
 <script>
-/* -------------------------------------------------------
-   CARDHOUSE: shared utilities and saved arcade progress
-------------------------------------------------------- */
+/* =========================================
+   SHARED ARCADE SYSTEM
+========================================= */
 
 const games = [
   ["blackjack","♠","Blackjack","Reach 21 or get closer than the dealer without going over."],
-  ["roulette","🎡","Roulette Wheel","Watch a classic roulette wheel spin and discover where it lands. No betting."],
+  ["roulette","🎡","Roulette","Spin a traditional European roulette wheel."],
   ["poker","♦","Five-Card Poker","Draw cards and compare your five-card hand with the dealer."],
-  ["war","⚔","War","Draw cards against the computer. The higher card wins each round."],
-  ["gofish","🐟","Go Fish","Collect books of four matching ranks before your opponent."],
-  ["eights","♥","Crazy Eights","Play matching suits or ranks and be the first to empty your hand."],
-  ["oldmaid","🃏","Old Maid","Match pairs and avoid being left with the unpaired queen."],
-  ["solitaire","♣","Klondike Solitaire","Build four foundations from Ace to King by suit."]
+  ["war","⚔","War","Draw cards against the computer. The higher card wins."],
+  ["gofish","🐟","Go Fish","Collect books of four matching ranks."],
+  ["eights","♥","Crazy Eights","Match suits or ranks and be the first to empty your hand."],
+  ["oldmaid","🃏","Old Maid","Match pairs and avoid being left with the Old Maid."],
+  ["solitaire","♣","Klondike Solitaire","Build four foundations from Ace to King."]
 ];
 
 let tokens = Number(localStorage.getItem("cardhouseTokens") || 0);
@@ -174,14 +400,21 @@ function saveProgress(){
   localStorage.setItem("cardhouseRewarded",JSON.stringify(rewarded));
   updateWallet();
 }
-function updateWallet(){ $("tokens").textContent=tokens; }
+
+function updateWallet(){
+  $("tokens").textContent=tokens;
+}
+
 function rewardWin(game){
-  if(rewarded[game]) return "You've already earned this game's reward this session.";
-  tokens += 25;
+  if(rewarded[game]) return "You already earned this game's reward.";
+
+  tokens+=25;
   rewarded[game]=true;
   saveProgress();
+
   return "You earned 25 tokens!";
 }
+
 function shuffle(array){
   for(let i=array.length-1;i>0;i--){
     const j=Math.floor(Math.random()*(i+1));
@@ -189,37 +422,67 @@ function shuffle(array){
   }
   return array;
 }
+
 const suits=["♠","♥","♦","♣"];
 const ranks=["A","2","3","4","5","6","7","8","9","10","J","Q","K"];
+
 function makeDeck(){
-  let d=[];
-  for(const s of suits) for(let i=0;i<ranks.length;i++)
-    d.push({suit:s,rank:ranks[i],value:i+1});
-  return shuffle(d);
+  let deck=[];
+
+  for(const suit of suits){
+    for(let i=0;i<ranks.length;i++){
+      deck.push({
+        suit,
+        rank:ranks[i],
+        value:i+1
+      });
+    }
+  }
+
+  return shuffle(deck);
 }
-function cardHTML(c,hidden=false){
-  if(hidden) return '<div class="playing-card back"></div>';
-  let red=c.suit==="♥"||c.suit==="♦";
-  return `<div class="playing-card ${red?"red":""}">
-    <div>${c.rank}${c.suit}</div>
-    <div class="center">${c.suit}</div>
-    <div class="bottom">${c.rank}${c.suit}</div>
-  </div>`;
+
+function cardHTML(card,hidden=false){
+  if(hidden){
+    return '<div class="playing-card back"></div>';
+  }
+
+  const red=card.suit==="♥"||card.suit==="♦";
+
+  return `
+    <div class="playing-card ${red?"red":""}">
+      <div>${card.rank}${card.suit}</div>
+      <div class="center">${card.suit}</div>
+      <div class="bottom">${card.rank}${card.suit}</div>
+    </div>
+  `;
 }
-function showCards(cards,hiddenIndex=-1){
-  return `<div class="hand">${cards.map((c,i)=>cardHTML(c,i===hiddenIndex)).join("")}</div>`;
+
+function showCards(cards){
+  return `<div class="hand">${cards.map(c=>cardHTML(c)).join("")}</div>`;
 }
-function status(message){$("gameStatus").textContent=message;}
-function controls(html){$("gameControls").innerHTML=html;}
-function table(html){$("gameTable").innerHTML=html;}
+
+function status(message){
+  $("gameStatus").textContent=message;
+}
+
+function controls(html){
+  $("gameControls").innerHTML=html;
+}
+
+function table(html){
+  $("gameTable").innerHTML=html;
+}
+
 function startGame(id){
   currentGame=id;
+
   $("gameScreen").classList.add("active");
   $("gameTitle").textContent=games.find(g=>g[0]===id)[2];
   $("gameDescription").textContent=games.find(g=>g[0]===id)[3];
-  $("gameInfo").textContent="";
-  window.scrollTo({top:$("gameScreen").offsetTop-10,behavior:"smooth"});
-  ({
+  $("gameInfo").innerHTML="";
+
+  const starters={
     blackjack:startBlackjack,
     roulette:startRoulette,
     poker:startPoker,
@@ -228,12 +491,21 @@ function startGame(id){
     eights:startEights,
     oldmaid:startOldMaid,
     solitaire:startSolitaire
-  })[id]();
+  };
+
+  starters[id]();
+
+  window.scrollTo({
+    top:$("gameScreen").offsetTop-10,
+    behavior:"smooth"
+  });
 }
+
 function closeGame(){
   $("gameScreen").classList.remove("active");
   currentGame=null;
 }
+
 function buildLibrary(){
   $("gameLibrary").innerHTML=games.map(g=>`
     <div class="game-card">
@@ -241,8 +513,10 @@ function buildLibrary(){
       <h3>${g[2]}</h3>
       <p>${g[3]}</p>
       <button onclick="startGame('${g[0]}')">Play Game →</button>
-    </div>`).join("");
+    </div>
+  `).join("");
 }
+
 function buildShop(){
   const items=[
     {name:"Gold",price:0,description:"The original classic casino look."},
@@ -250,587 +524,1439 @@ function buildShop(){
     {name:"Royal Blue",price:75,description:"A deep blue card table."},
     {name:"Burgundy",price:100,description:"A warm red table theme."}
   ];
+
   $("shop").innerHTML=items.map(item=>{
-    let owned=ownedThemes.includes(item.name);
-    return `<div class="shop-item">
-      <h3>${item.name}</h3><p class="info">${item.description}</p>
-      <p class="score">${item.price===0?"Free":item.price+" tokens"}</p>
-      <button class="${owned?"secondary":""}" onclick="buyTheme('${item.name}',${item.price})" ${owned?"disabled":""}>
-        ${owned?(activeTheme===item.name?"Selected":"Owned"):"Unlock"}
-      </button>
-      ${owned?`<button class="secondary small" onclick="useTheme('${item.name}')">Use Theme</button>`:""}
-    </div>`;
+    const owned=ownedThemes.includes(item.name);
+
+    return `
+      <div class="shop-item">
+        <h3>${item.name}</h3>
+        <p class="info">${item.description}</p>
+        <p class="score">${item.price===0?"Free":item.price+" tokens"}</p>
+        <button ${owned?"disabled":""}
+          class="${owned?"secondary":""}"
+          onclick="buyTheme('${item.name}',${item.price})">
+          ${owned?(activeTheme===item.name?"Selected":"Owned"):"Unlock"}
+        </button>
+        ${owned?`
+          <button class="secondary small"
+            onclick="useTheme('${item.name}')">Use Theme</button>
+        `:""}
+      </div>
+    `;
   }).join("");
+
+  $("collection").textContent="Unlocked themes: "+ownedThemes.join(", ");
 }
+
 function buyTheme(name,price){
-  if(ownedThemes.includes(name)) return;
-  if(tokens<price){alert("You need more tokens to unlock this theme.");return;}
-  tokens-=price;ownedThemes.push(name);saveProgress();buildShop();
+  if(ownedThemes.includes(name))return;
+
+  if(tokens<price){
+    alert("You need more tokens to unlock this theme.");
+    return;
+  }
+
+  tokens-=price;
+  ownedThemes.push(name);
+  saveProgress();
+  buildShop();
 }
+
 function useTheme(name){
   if(!ownedThemes.includes(name))return;
+
   activeTheme=name;
+
   const colors={
     Gold:["#174d36","#d5ad55"],
     Emerald:["#075b3d","#65d6a0"],
     "Royal Blue":["#183b6b","#86b9f2"],
     Burgundy:["#682d3a","#e9a1aa"]
   };
+
   document.documentElement.style.setProperty("--felt",colors[name][0]);
   document.documentElement.style.setProperty("--gold",colors[name][1]);
+
   localStorage.setItem("cardhouseActiveTheme",name);
   buildShop();
 }
+
 function resetProgress(){
   if(!confirm("Reset your tokens, themes, and rewards?"))return;
-  tokens=0;ownedThemes=["Gold"];activeTheme="Gold";rewarded={};
-  saveProgress();useTheme("Gold");buildShop();
-}
-buildLibrary();buildShop();updateWallet();useTheme(activeTheme);
 
-/* -------------------------------------------------------
+  tokens=0;
+  ownedThemes=["Gold"];
+  activeTheme="Gold";
+  rewarded={};
+
+  saveProgress();
+  useTheme("Gold");
+  buildShop();
+}
+
+buildLibrary();
+buildShop();
+updateWallet();
+useTheme(activeTheme);
+
+/* =========================================
    BLACKJACK
-   Standard hit / stand rules. Aces count as 1 or 11.
-------------------------------------------------------- */
+========================================= */
+
 let bj={};
+
 function bjValue(hand){
-  let total=0,aces=0;
+  let total=0;
+  let aces=0;
+
   hand.forEach(c=>{
     if(["J","Q","K"].includes(c.rank))total+=10;
     else if(c.rank==="A"){total+=11;aces++;}
     else total+=Number(c.rank);
   });
-  while(total>21&&aces>0){total-=10;aces--;}
+
+  while(total>21&&aces>0){
+    total-=10;
+    aces--;
+  }
+
   return total;
 }
+
 function startBlackjack(){
-  bj={deck:makeDeck(),player:[],dealer:[],over:false};
+  bj={
+    deck:makeDeck(),
+    player:[],
+    dealer:[],
+    over:false
+  };
+
   bj.player.push(bj.deck.pop(),bj.deck.pop());
   bj.dealer.push(bj.deck.pop(),bj.deck.pop());
+
   renderBlackjack();
 }
+
 function renderBlackjack(){
-  table(`<h3>Your Hand — ${bjValue(bj.player)}</h3>${showCards(bj.player)}
+  table(`
+    <h3>Your Hand — ${bjValue(bj.player)}</h3>
+    ${showCards(bj.player)}
     <h3>Dealer — ${bj.over?bjValue(bj.dealer):"?"}</h3>
-    ${showCards(bj.dealer,bj.over?-1:1)}`);
+    <div class="hand">
+      ${bj.dealer.map((c,i)=>cardHTML(c,!bj.over&&i===1)).join("")}
+    </div>
+  `);
+
   if(!bj.over){
-    controls(`<button onclick="bjHit()">Hit</button><button onclick="bjStand()">Stand</button>`);
-    status("Choose Hit to draw a card or Stand to keep your hand.");
+    controls(`
+      <button onclick="bjHit()">Hit</button>
+      <button onclick="bjStand()">Stand</button>
+    `);
+
+    status("Choose Hit or Stand.");
   }
 }
+
 function bjHit(){
   if(bj.over)return;
+
   bj.player.push(bj.deck.pop());
-  if(bjValue(bj.player)>21){bj.over=true;finishBlackjack();}
-  else renderBlackjack();
+
+  if(bjValue(bj.player)>21){
+    bj.over=true;
+    finishBlackjack();
+  }else{
+    renderBlackjack();
+  }
 }
+
 function bjStand(){
   if(bj.over)return;
+
   bj.over=true;
-  while(bjValue(bj.dealer)<17)bj.dealer.push(bj.deck.pop());
+
+  while(bjValue(bj.dealer)<17){
+    bj.dealer.push(bj.deck.pop());
+  }
+
   finishBlackjack();
 }
+
 function finishBlackjack(){
-  let p=bjValue(bj.player),d=bjValue(bj.dealer),message;
-  if(p>21)message="Bust! The dealer wins.";
-  else if(d>21)message="The dealer busts. You win!";
+  const p=bjValue(bj.player);
+  const d=bjValue(bj.dealer);
+
+  let message;
+
+  if(p>21)message="Bust! Dealer wins.";
+  else if(d>21)message="Dealer busts! You win!";
   else if(p>d)message="You win!";
-  else if(p<d)message="The dealer wins.";
+  else if(p<d)message="Dealer wins.";
   else message="It's a push — tie game.";
-  renderBlackjack();status(message);
+
+  renderBlackjack();
+  status(message);
+
   controls(`<button onclick="startBlackjack()">Play Again</button>`);
-  if(message==="You win!"||message.startsWith("The dealer busts"))$("gameInfo").textContent=rewardWin("blackjack");
-  $("gameInfo").textContent += " Dealer must stand on 17 or higher.";
+
+  if(message.includes("You win")){
+    $("gameInfo").textContent=rewardWin("blackjack");
+  }
 }
 
-/* -------------------------------------------------------
-   ROULETTE WHEEL DEMONSTRATION
-   No wagers, chips, or token stakes.
-------------------------------------------------------- */
+/* =========================================
+   EUROPEAN ROULETTE TABLE
+========================================= */
+
+let rouletteHistory=[];
+let rouletteSpinning=false;
+
+const rouletteRed=[
+  1,3,5,7,9,12,14,16,18,
+  19,21,23,25,27,30,32,34,36
+];
+
+function rouletteColor(n){
+  if(n===0)return "green";
+  return rouletteRed.includes(n)?"red":"black";
+}
+
+function renderRouletteHistory(){
+  if(!rouletteHistory.length){
+    return '<span style="width:auto">No spins yet</span>';
+  }
+
+  return rouletteHistory.map(n=>`
+    <span style="background:${
+      rouletteColor(n)==="red"?"#b52e36":
+      rouletteColor(n)==="black"?"#171717":"#08733d"
+    }">${n}</span>
+  `).join("");
+}
+
 function startRoulette(){
-  table(`<div style="font-size:75px">🎡</div><h3>European Roulette Wheel</h3>
-    <p class="info">The wheel has numbers 0–36. Spin to see the result.</p>
-    <div class="score" id="rouletteResult">Ready to spin</div>`);
-  controls(`<button onclick="spinRoulette()">Spin the Wheel</button>`);
-  status("A wheel simulator — no betting or token wagering.");
-}
-function spinRoulette(){
-  const n=Math.floor(Math.random()*37);
-  const red=[1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36];
-  const color=n===0?"Green":red.includes(n)?"Red":"Black";
-  $("rouletteResult").innerHTML=`<span style="font-size:55px">${n}</span><br>${color}`;
-  status("The wheel has stopped.");
-  controls(`<button onclick="spinRoulette()">Spin Again</button>`);
+  rouletteSpinning=false;
+
+  let numbers="";
+
+  // European roulette has 0 through 36.
+  // Layout is 0, then three rows of 12 numbers.
+  for(let n=1;n<=36;n++){
+    numbers+=`
+      <div class="roulette-cell ${rouletteColor(n)}"
+        id="roulette-${n}">${n}</div>
+    `;
+  }
+
+  table(`
+    <div class="roulette-layout">
+      <div class="roulette-wheel" id="rouletteWheel">🎡</div>
+      <h3>European Roulette</h3>
+
+      <div class="roulette-result" id="rouletteResult">
+        Spin the wheel!
+      </div>
+
+      <div class="roulette-grid">
+        <div class="roulette-cell green"
+          style="grid-row:span 3">0</div>
+        ${numbers}
+      </div>
+
+      <h3>Recent Results</h3>
+      <div class="roulette-history" id="rouletteHistory">
+        ${renderRouletteHistory()}
+      </div>
+    </div>
+  `);
+
+  controls(`
+    <button id="spinButton" onclick="spinRoulette()">
+      🎡 Spin Wheel
+    </button>
+  `);
+
+  status("Press Spin Wheel to begin.");
+
+  $("gameInfo").textContent=
+    "European roulette has 37 numbers: 0 through 36. This is a wheel simulator without wagers.";
 }
 
-/* -------------------------------------------------------
+function spinRoulette(){
+  if(rouletteSpinning)return;
+
+  rouletteSpinning=true;
+
+  const button=$("spinButton");
+  if(button)button.disabled=true;
+
+  const wheel=$("rouletteWheel");
+  wheel.classList.remove("spinning");
+  void wheel.offsetWidth;
+  wheel.classList.add("spinning");
+
+  const result=Math.floor(Math.random()*37);
+
+  setTimeout(()=>{
+    document.querySelectorAll(".roulette-cell")
+      .forEach(c=>c.classList.remove("winner"));
+
+    if(result===0){
+      document.querySelector(".roulette-cell.green").classList.add("winner");
+    }else{
+      $("roulette-"+result).classList.add("winner");
+    }
+
+    const color=rouletteColor(result);
+
+    $("rouletteResult").innerHTML=`
+      <strong style="font-size:45px">${result}</strong><br>
+      <span style="color:${
+        color==="red"?"#ff7777":
+        color==="black"?"white":"#76e7a1"
+      }">${color.toUpperCase()}</span>
+    `;
+
+    rouletteHistory.unshift(result);
+    rouletteHistory=rouletteHistory.slice(0,10);
+
+    $("rouletteHistory").innerHTML=renderRouletteHistory();
+
+    status("The wheel has stopped!");
+
+    rouletteSpinning=false;
+    if(button)button.disabled=false;
+
+  },1500);
+}
+
+/* =========================================
    FIVE-CARD DRAW POKER
-   Player and dealer each receive five cards.
-   Player may exchange up to three cards once.
-   Hands are ranked using standard poker hand rankings.
-   No bets or stakes.
-------------------------------------------------------- */
+========================================= */
+
 let poker={};
+
 function startPoker(){
-  let d=makeDeck();
-  poker={deck:d,player:d.splice(0,5),dealer:d.splice(0,5),drawn:false,over:false};
+  const deck=makeDeck();
+
+  poker={
+    deck,
+    player:deck.splice(0,5),
+    dealer:deck.splice(0,5),
+    exchanged:false,
+    over:false
+  };
+
   renderPoker();
 }
-function pokerRank(hand){
-  const vals=hand.map(c=>c.value===1?14:c.value).sort((a,b)=>b-a);
+
+function pokerEvaluate(hand){
+  const values=hand.map(c=>c.value===1?14:c.value)
+    .sort((a,b)=>b-a);
+
   const counts={};
-  vals.forEach(v=>counts[v]=(counts[v]||0)+1);
-  const groups=Object.entries(counts).map(([v,n])=>({v:Number(v),n})).sort((a,b)=>b.n-a.n||b.v-a.v);
+
+  values.forEach(v=>counts[v]=(counts[v]||0)+1);
+
+  const groups=Object.entries(counts)
+    .map(([value,count])=>({value:Number(value),count}))
+    .sort((a,b)=>b.count-a.count||b.value-a.value);
+
   const flush=hand.every(c=>c.suit===hand[0].suit);
-  const unique=[...new Set(vals)].sort((a,b)=>b-a);
-  let straight=unique.length===5&&unique[0]-unique[4]===4;
-  if(unique.join(",")==="14,5,4,3,2")straight=true;
-  const high=unique.join(",")==="14,5,4,3,2"?5:unique[0];
-  let name,score,tie=[];
-  if(straight&&flush){name="Straight Flush";score=8;tie=[high];}
-  else if(groups[0].n===4){name="Four of a Kind";score=7;tie=groups.map(x=>x.v);}
-  else if(groups[0].n===3&&groups[1].n===2){name="Full House";score=6;tie=groups.map(x=>x.v);}
-  else if(flush){name="Flush";score=5;tie=vals;}
-  else if(straight){name="Straight";score=4;tie=[high];}
-  else if(groups[0].n===3){name="Three of a Kind";score=3;tie=groups.map(x=>x.v);}
-  else if(groups[0].n===2&&groups[1].n===2){name="Two Pair";score=2;tie=groups.map(x=>x.v);}
-  else if(groups[0].n===2){name="One Pair";score=1;tie=groups.map(x=>x.v);}
-  else{name="High Card";score=0;tie=vals;}
-  return {name,score,tie};
-}
-function comparePoker(a,b){
-  const x=pokerRank(a),y=pokerRank(b);
-  if(x.score!==y.score)return x.score>y.score?1:-1;
-  for(let i=0;i<Math.max(x.tie.length,y.tie.length);i++){
-    if((x.tie[i]||0)!==(y.tie[i]||0))return (x.tie[i]||0)>(y.tie[i]||0)?1:-1;
+
+  const unique=[...new Set(values)];
+  let straight=false;
+  let high=0;
+
+  if(unique.length===5){
+    if(unique[0]-unique[4]===4){
+      straight=true;
+      high=unique[0];
+    }
+
+    if(unique.join(",")==="14,5,4,3,2"){
+      straight=true;
+      high=5;
+    }
   }
+
+  let category,tie;
+
+  if(straight&&flush){category=8;tie=[high];}
+  else if(groups[0].count===4){category=7;tie=groups.map(g=>g.value);}
+  else if(groups[0].count===3&&groups[1].count===2){category=6;tie=groups.map(g=>g.value);}
+  else if(flush){category=5;tie=values;}
+  else if(straight){category=4;tie=[high];}
+  else if(groups[0].count===3){category=3;tie=groups.map(g=>g.value);}
+  else if(groups[0].count===2&&groups[1].count===2){category=2;tie=groups.map(g=>g.value);}
+  else if(groups[0].count===2){category=1;tie=groups.map(g=>g.value);}
+  else{category=0;tie=values;}
+
+  const names=[
+    "High Card","One Pair","Two Pair","Three of a Kind",
+    "Straight","Flush","Full House","Four of a Kind","Straight Flush"
+  ];
+
+  return {category,tie,name:names[category],groups};
+}
+
+function comparePokerHands(a,b){
+  const x=pokerEvaluate(a);
+  const y=pokerEvaluate(b);
+
+  if(x.category!==y.category)return x.category>y.category?1:-1;
+
+  for(let i=0;i<Math.max(x.tie.length,y.tie.length);i++){
+    const first=x.tie[i]||0;
+    const second=y.tie[i]||0;
+
+    if(first!==second)return first>second?1:-1;
+  }
+
   return 0;
 }
+
 function renderPoker(){
-  table(`<h3>Your Hand</h3>${showCards(poker.player)}
-    <h3>Dealer's Hand</h3>${showCards(poker.dealer,poker.over?-1:0)}`);
-  if(!poker.drawn){
-    controls(`<button onclick="pokerDraw()">Choose Cards to Replace</button>
-      <button class="secondary" onclick="pokerKeep()">Keep All Cards</button>`);
-    status("Select the cards you want to replace, then draw new ones.");
-    $("gameInfo").innerHTML=poker.player.map((c,i)=>
-      `<label style="display:inline-block;margin:5px"><input type="checkbox" id="pd${i}"> ${c.rank}${c.suit}</label>`).join("");
+  table(`
+    <h3>Your Hand</h3>
+    ${showCards(poker.player)}
+    <h3>Dealer's Hand</h3>
+    <div class="hand">
+      ${poker.dealer.map((c,i)=>cardHTML(c,!poker.over&&i===0)).join("")}
+    </div>
+  `);
+
+  if(!poker.exchanged){
+    status("Choose up to three cards to exchange, or keep your hand.");
+
+    $("gameInfo").innerHTML=`
+      <p>Select cards to exchange:</p>
+      <div class="hand">
+        ${poker.player.map((c,i)=>`
+          <label>
+            <input type="checkbox" id="pokerCard${i}">
+            ${c.rank}${c.suit}
+          </label>
+        `).join("")}
+      </div>
+    `;
+
+    controls(`
+      <button onclick="pokerExchange()">Exchange Selected Cards</button>
+      <button class="secondary" onclick="pokerKeep()">Keep All Cards</button>
+    `);
   }
-}
-function pokerDraw(){
-  if(poker.drawn||poker.over)return;
-  let indexes=[];
-  for(let i=0;i<5;i++)if($("pd"+i)?.checked)indexes.push(i);
-  if(indexes.length>3){status("You may replace up to three cards.");return;}
-  indexes.forEach(i=>poker.player[i]=poker.deck.pop());
-  poker.drawn=true;
-  pokerFinish();
-}
-function pokerKeep(){if(!poker.drawn&&!poker.over){poker.drawn=true;pokerFinish();}}
-function pokerFinish(){
-  // Dealer holds a pair or better; otherwise exchanges cards below Jack.
-  const dr=pokerRank(poker.dealer);
-  if(dr.score===0){
-    let replacements=[];
-    poker.dealer.forEach((c,i)=>{if((c.value===1?14:c.value)<11)replacements.push(i);});
-    replacements.slice(0,3).forEach(i=>poker.dealer[i]=poker.deck.pop());
-  }
-  poker.over=true;
-  const result=comparePoker(poker.player,poker.dealer);
-  const pn=pokerRank(poker.player).name,dn=pokerRank(poker.dealer).name;
-  renderPoker();
-  table(`<h3>Your Hand — ${pn}</h3>${showCards(poker.player)}
-    <h3>Dealer — ${dn}</h3>${showCards(poker.dealer)}`);
-  status(result>0?"You win the hand!":result<0?"Dealer wins the hand.":"It's a tie!");
-  controls(`<button onclick="startPoker()">New Hand</button>`);
-  if(result>0)$("gameInfo").textContent=rewardWin("poker");
-  $("gameInfo").textContent+=" Hand rankings: High Card, Pair, Two Pair, Three of a Kind, Straight, Flush, Full House, Four of a Kind, Straight Flush.";
 }
 
-/* -------------------------------------------------------
+function pokerExchange(){
+  if(poker.exchanged||poker.over)return;
+
+  const selected=[];
+
+  for(let i=0;i<5;i++){
+    if($("pokerCard"+i)?.checked)selected.push(i);
+  }
+
+  if(selected.length>3){
+    status("You may exchange up to three cards.");
+    return;
+  }
+
+  selected.forEach(i=>poker.player[i]=poker.deck.pop());
+
+  poker.exchanged=true;
+  pokerDealerPlay();
+}
+
+function pokerKeep(){
+  if(poker.exchanged||poker.over)return;
+  poker.exchanged=true;
+  pokerDealerPlay();
+}
+
+function pokerDealerPlay(){
+  const counts={};
+
+  poker.dealer.forEach(c=>{
+    const v=c.value===1?14:c.value;
+    counts[v]=(counts[v]||0)+1;
+  });
+
+  const keep=[];
+
+  Object.keys(counts).forEach(v=>{
+    if(counts[v]>=2)keep.push(Number(v));
+  });
+
+  if(!keep.length){
+    const high=Math.max(...poker.dealer.map(c=>c.value===1?14:c.value));
+    keep.push(high);
+  }
+
+  let replaced=0;
+
+  poker.dealer=poker.dealer.map(c=>{
+    const value=c.value===1?14:c.value;
+
+    if(!keep.includes(value)&&replaced<3){
+      replaced++;
+      return poker.deck.pop();
+    }
+
+    return c;
+  });
+
+  poker.over=true;
+  finishPoker();
+}
+
+function finishPoker(){
+  const playerRank=pokerEvaluate(poker.player);
+  const dealerRank=pokerEvaluate(poker.dealer);
+  const result=comparePokerHands(poker.player,poker.dealer);
+
+  table(`
+    <h3>Your Hand — ${playerRank.name}</h3>
+    ${showCards(poker.player)}
+    <h3>Dealer's Hand — ${dealerRank.name}</h3>
+    ${showCards(poker.dealer)}
+  `);
+
+  if(result>0){
+    status("You win the hand!");
+    $("gameInfo").textContent=rewardWin("poker");
+  }else if(result<0){
+    status("The dealer wins the hand.");
+  }else{
+    status("It's a tie!");
+  }
+
+  controls(`<button onclick="startPoker()">Deal New Hand</button>`);
+
+  $("gameInfo").innerHTML+=`
+    <p class="info">
+      Rankings: High Card, Pair, Two Pair, Three of a Kind,
+      Straight, Flush, Full House, Four of a Kind, Straight Flush.
+    </p>
+  `;
+}
+
+/* =========================================
    WAR
-   A high card wins. Ties trigger a War: three cards down,
-   then one card up. If a player cannot continue, the other
-   player wins the pile.
-------------------------------------------------------- */
+========================================= */
+
 let war={};
+
 function startWar(){
-  let d=makeDeck();
-  war={p:d.slice(0,26),c:d.slice(26),round:0,over:false,last:[]};
+  const deck=makeDeck();
+
+  war={
+    player:deck.slice(0,26),
+    cpu:deck.slice(26),
+    round:0,
+    over:false
+  };
+
   renderWar();
 }
+
 function renderWar(){
-  table(`<h3>Your Cards: ${war.p.length}</h3><div class="hand">${cardHTML({rank:"?",suit:"♠"},true)}</div>
-    <h3>Computer Cards: ${war.c.length}</h3><div class="hand">${cardHTML({rank:"?",suit:"♠"},true)}</div>
+  table(`
+    <h3>Your Cards: ${war.player.length}</h3>
+    <div class="hand">${cardHTML({rank:"?",suit:"♠"},true)}</div>
+    <h3>Computer Cards: ${war.cpu.length}</h3>
+    <div class="hand">${cardHTML({rank:"?",suit:"♠"},true)}</div>
     <p class="score">Round ${war.round}</p>
-    ${war.last.length?showCards(war.last):""}`);
-  controls(war.over?`<button onclick="startWar()">New Game</button>`:
-    `<button onclick="warRound()">Draw Cards</button>`);
+  `);
+
+  controls(war.over?
+    `<button onclick="startWar()">New Game</button>`:
+    `<button onclick="warRound()">Draw Cards</button>`
+  );
 }
+
 function warRound(){
   if(war.over)return;
-  if(war.p.length===0||war.c.length===0){endWar();return;}
-  let pile=[],p=war.p.shift(),c=war.c.shift();
-  pile.push(p,c);
-  let pv=p.value===1?14:p.value,cv=c.value===1?14:c.value;
-  let message="";
-  while(pv===cv){
-    message="War! Both cards match.";
-    if(war.p.length<4||war.c.length<4){war.p.push(...pile);war.c.push(...pile);endWar();return;}
-    for(let i=0;i<3;i++)pile.push(war.p.shift(),war.c.shift());
-    p=war.p.shift();c=war.c.shift();pile.push(p,c);
-    pv=p.value===1?14:p.value;cv=c.value===1?14:c.value;
+
+  let pile=[];
+
+  if(!war.player.length||!war.cpu.length){
+    endWar();
+    return;
   }
-  if(pv>cv){war.p.push(...pile);message="You win the round!";}
-  else{war.c.push(...pile);message="Computer wins the round.";}
-  war.round++;war.last=[p,c];
-  status(message);
-  if(war.p.length===0||war.c.length===0)endWar();
+
+  let p=war.player.shift();
+  let c=war.cpu.shift();
+
+  pile.push(p,c);
+
+  let pv=p.value===1?14:p.value;
+  let cv=c.value===1?14:c.value;
+
+  while(pv===cv){
+    if(war.player.length<4||war.cpu.length<4){
+      war.over=true;
+      status("A player ran out of cards during War.");
+      renderWar();
+      return;
+    }
+
+    for(let i=0;i<3;i++){
+      pile.push(war.player.shift(),war.cpu.shift());
+    }
+
+    p=war.player.shift();
+    c=war.cpu.shift();
+
+    pile.push(p,c);
+
+    pv=p.value===1?14:p.value;
+    cv=c.value===1?14:c.value;
+  }
+
+  if(pv>cv){
+    war.player.push(...pile);
+    status("You win the round!");
+  }else{
+    war.cpu.push(...pile);
+    status("Computer wins the round.");
+  }
+
+  war.round++;
+
+  if(!war.player.length||!war.cpu.length)endWar();
   else renderWar();
 }
+
 function endWar(){
   war.over=true;
-  let message=war.p.length>war.c.length?"You win the game!":war.p.length<war.c.length?"Computer wins the game.":"The game is tied.";
-  status(message);
-  if(war.p.length>war.c.length)$("gameInfo").textContent=rewardWin("war");
+
+  if(war.player.length>war.cpu.length){
+    status("You win the game!");
+    $("gameInfo").textContent=rewardWin("war");
+  }else if(war.cpu.length>war.player.length){
+    status("Computer wins the game.");
+  }else{
+    status("The game is tied.");
+  }
+
   renderWar();
 }
 
-/* -------------------------------------------------------
+/* =========================================
    GO FISH
-   Ask for a rank held in your hand. If the opponent has it,
-   they give all cards of that rank. Otherwise draw from pond.
-   A book is four cards of the same rank.
-------------------------------------------------------- */
+========================================= */
+
 let gf={};
+
 function startGoFish(){
-  let d=makeDeck();
-  gf={deck:d,player:d.splice(0,7),cpu:d.splice(0,7),books:0,cpuBooks:0,turn:"player",over:false,message:"Your turn."};
-  gfCheckBooks("player");gfCheckBooks("cpu");renderGoFish();
+  const deck=makeDeck();
+
+  gf={
+    deck,
+    player:deck.splice(0,7),
+    cpu:deck.splice(0,7),
+    books:0,
+    cpuBooks:0,
+    turn:"player",
+    over:false,
+    message:"Your turn. Ask for a rank."
+  };
+
+  gfCheckBooks("player");
+  gfCheckBooks("cpu");
+  gfCheckEnd();
+  renderGoFish();
 }
+
 function gfCheckBooks(who){
-  let hand=gf[who],groups={};
-  hand.forEach(c=>groups[c.rank]=(groups[c.rank]||0)+1);
-  for(const rank in groups)if(groups[rank]===4){
-    gf[who]=hand.filter(c=>c.rank!==rank);
-    if(who==="player")gf.books++;else gf.cpuBooks++;
+  const hand=gf[who];
+  const counts={};
+
+  hand.forEach(c=>counts[c.rank]=(counts[c.rank]||0)+1);
+
+  for(const rank of Object.keys(counts)){
+    if(counts[rank]===4){
+      gf[who]=gf[who].filter(c=>c.rank!==rank);
+
+      if(who==="player")gf.books++;
+      else gf.cpuBooks++;
+    }
   }
 }
-function renderGoFish(){
-  table(`<h3>Your Hand (${gf.player.length} cards)</h3>${showCards(gf.player)}
-    <p class="score">Your books: ${gf.books} | Computer books: ${gf.cpuBooks}</p>
-    <p class="info">Opponent cards: ${gf.cpu.length} | Cards in pond: ${gf.deck.length}</p>`);
-  if(gf.over){controls(`<button onclick="startGoFish()">New Game</button>`);return;}
-  if(gf.turn==="player"){
-    const options=[...new Set(gf.player.map(c=>c.rank))];
-    controls(`<label>Ask for a rank:
-      <select id="gfRank">${options.map(r=>`<option>${r}</option>`).join("")}</select></label>
-      <button onclick="gfAsk()">Ask</button>`);
-  }else controls(`<button onclick="gfCpuTurn()">Continue</button>`);
-  status(gf.message);
+
+function gfDraw(who){
+  if(!gf.deck.length)return null;
+
+  const card=gf.deck.pop();
+  gf[who].push(card);
+  return card;
 }
+
+function gfCheckEnd(){
+  if(gf.books+gf.cpuBooks===13||
+     (!gf.deck.length&&(!gf.player.length||!gf.cpu.length))){
+    gf.over=true;
+
+    if(gf.books>gf.cpuBooks){
+      gf.message="You win Go Fish!";
+      $("gameInfo").textContent=rewardWin("gofish");
+    }else if(gf.cpuBooks>gf.books){
+      gf.message="Computer wins Go Fish.";
+    }else{
+      gf.message="The game is tied.";
+    }
+
+    return true;
+  }
+
+  return false;
+}
+
+function renderGoFish(){
+  table(`
+    <h3>Your Hand — ${gf.player.length} cards</h3>
+    ${showCards(gf.player)}
+    <p class="score">Your Books: ${gf.books} | Computer Books: ${gf.cpuBooks}</p>
+    <p class="info">
+      Computer cards: ${gf.cpu.length}<br>
+      Cards in pond: ${gf.deck.length}
+    </p>
+  `);
+
+  status(gf.message);
+
+  if(gf.over){
+    controls(`<button onclick="startGoFish()">New Game</button>`);
+    return;
+  }
+
+  if(gf.turn==="player"){
+    const available=[...new Set(gf.player.map(c=>c.rank))];
+
+    controls(`
+      <label>Ask for:
+        <select id="gfRank">
+          ${available.map(r=>`<option>${r}</option>`).join("")}
+        </select>
+      </label>
+      <button onclick="gfAsk()">Ask</button>
+    `);
+  }else{
+    controls(`<button onclick="gfCpuTurn()">Continue</button>`);
+  }
+}
+
 function gfAsk(){
-  if(gf.turn!=="player"||gf.over)return;
+  if(gf.over||gf.turn!=="player")return;
+
+  if(!gf.player.length){
+    if(!gfDraw("player")){
+      gfCheckEnd();
+      renderGoFish();
+      return;
+    }
+  }
+
   const rank=$("gfRank").value;
+
+  if(!gf.player.some(c=>c.rank===rank)){
+    status("You must ask for a rank in your hand.");
+    return;
+  }
+
   const found=gf.cpu.filter(c=>c.rank===rank);
+
   if(found.length){
     gf.player.push(...found);
     gf.cpu=gf.cpu.filter(c=>c.rank!==rank);
-    gf.message="The computer had "+rank+"s. You get another turn!";
+    gf.message=`The computer had ${rank}s! You get another turn.`;
     gfCheckBooks("player");
   }else{
-    gf.message="Go Fish! You draw a card.";
-    if(gf.deck.length)gf.player.push(gf.deck.pop());
-    gfCheckBooks("player");gf.turn="cpu";
+    const drawn=gfDraw("player");
+
+    if(!drawn){
+      gf.message="The pond is empty. Your turn ends.";
+      gf.turn="cpu";
+    }else if(drawn.rank===rank){
+      gf.message=`Go Fish! You drew a ${rank}. You get another turn!`;
+      gfCheckBooks("player");
+    }else{
+      gf.message=`Go Fish! You drew ${drawn.rank}.`;
+      gf.turn="cpu";
+    }
   }
-  gfCheckEnd();renderGoFish();
+
+  gfCheckEnd();
+  renderGoFish();
 }
+
 function gfCpuTurn(){
-  if(gf.turn!=="cpu"||gf.over)return;
-  if(!gf.cpu.length){gf.turn="player";renderGoFish();return;}
-  let rank=gf.cpu[Math.floor(Math.random()*gf.cpu.length)].rank;
-  let found=gf.player.filter(c=>c.rank===rank);
+  if(gf.over||gf.turn!=="cpu")return;
+
+  if(!gf.cpu.length){
+    if(!gfDraw("cpu")){
+      gfCheckEnd();
+      renderGoFish();
+      return;
+    }
+  }
+
+  const available=[...new Set(gf.cpu.map(c=>c.rank))];
+
+  if(!available.length){
+    gfCheckEnd();
+    renderGoFish();
+    return;
+  }
+
+  const rank=available[Math.floor(Math.random()*available.length)];
+  const found=gf.player.filter(c=>c.rank===rank);
+
   if(found.length){
     gf.cpu.push(...found);
     gf.player=gf.player.filter(c=>c.rank!==rank);
-    gf.message="Computer asks for "+rank+"s and gets them.";
+    gf.message=`Computer asks for ${rank}s and gets them. Computer goes again.`;
     gfCheckBooks("cpu");
   }else{
-    if(gf.deck.length)gf.cpu.push(gf.deck.pop());
+    const drawn=gfDraw("cpu");
+
+    if(drawn&&drawn.rank===rank){
+      gf.message=`Computer draws a ${rank} and gets another turn.`;
+      gfCheckBooks("cpu");
+      gfCheckEnd();
+      renderGoFish();
+      return;
+    }
+
     gf.message="Computer says Go Fish and draws a card.";
-    gfCheckBooks("cpu");
   }
-  gf.turn="player";gfCheckEnd();renderGoFish();
-}
-function gfCheckEnd(){
-  if((gf.deck.length===0&&(!gf.player.length||!gf.cpu.length))||
-     (!gf.player.length&&!gf.cpu.length)||gf.books+gf.cpuBooks===13){
-    gf.over=true;
-    if(gf.books>gf.cpuBooks){gf.message="You win Go Fish!";$("gameInfo").textContent=rewardWin("gofish");}
-    else if(gf.books<gf.cpuBooks)gf.message="Computer wins Go Fish.";
-    else gf.message="The game is tied.";
-  }
+
+  gf.turn="player";
+  gfCheckEnd();
+  renderGoFish();
 }
 
-/* -------------------------------------------------------
+/* =========================================
    CRAZY EIGHTS
-   Match the rank or suit of the top card. Eights are wild
-   and let the player choose the next suit.
-------------------------------------------------------- */
+========================================= */
+
 let ce={};
+
 function startEights(){
-  let d=makeDeck();
-  ce={deck:d,player:d.splice(0,7),cpu:d.splice(0,7),pile:[d.pop()],turn:"player",over:false};
+  const deck=makeDeck();
+
+  ce={
+    deck,
+    player:deck.splice(0,7),
+    cpu:deck.splice(0,7),
+    pile:[deck.pop()],
+    turn:"player",
+    over:false,
+    suit:null
+  };
+
   ce.suit=ce.pile[0].suit;
   renderEights();
 }
-function canPlay(c){let top=ce.pile[ce.pile.length-1];return c.rank==="8"||c.suit===ce.suit||c.rank===top.rank;}
-function renderEights(){
+
+function ceCanPlay(card){
   const top=ce.pile[ce.pile.length-1];
-  table(`<h3>Top Card</h3>${showCards([top])}
-    <p class="score">Current suit: ${ce.suit}</p>
-    <p class="info">Computer cards: ${ce.cpu.length} | Draw pile: ${ce.deck.length}</p>
-    <h3>Your Hand</h3>${showCards(ce.player)}`);
-  if(ce.over){controls(`<button onclick="startEights()">New Game</button>`);return;}
+
+  return card.rank==="8"||
+    card.suit===ce.suit||
+    card.rank===top.rank;
+}
+
+function renderEights(){
+  table(`
+    <h3>Top Card</h3>
+    ${showCards([ce.pile[ce.pile.length-1]])}
+    <p class="score">Current Suit: ${ce.suit}</p>
+    <p class="info">
+      Computer Cards: ${ce.cpu.length} |
+      Draw Pile: ${ce.deck.length}
+    </p>
+    <h3>Your Hand</h3>
+    ${showCards(ce.player)}
+  `);
+
+  if(ce.over){
+    controls(`<button onclick="startEights()">New Game</button>`);
+    return;
+  }
+
   if(ce.turn==="player"){
-    controls(`<label>Card to play:
-      <select id="ceCard">${ce.player.map((c,i)=>`<option value="${i}" ${canPlay(c)?"":"disabled"}>${c.rank}${c.suit}</option>`).join("")}</select>
-      </label><button onclick="cePlay()">Play Card</button><button class="secondary" onclick="ceDraw()">Draw Card</button>`);
-  }else controls(`<button onclick="ceCpuTurn()">Continue</button>`);
-  status(ce.turn==="player"?"Your turn. Match the suit or rank, or play an eight.":"Computer's turn.");
+    controls(`
+      <label>Play:
+        <select id="ceCard">
+          ${ce.player.map((c,i)=>`
+            <option value="${i}" ${ceCanPlay(c)?"":"disabled"}>
+              ${c.rank}${c.suit}
+            </option>
+          `).join("")}
+        </select>
+      </label>
+      <button onclick="cePlay()">Play Card</button>
+      <button class="secondary" onclick="ceDraw()">Draw Card</button>
+    `);
+    status("Your turn. Match the suit or rank, or play an eight.");
+  }else{
+    controls(`<button onclick="ceCpuTurn()">Continue</button>`);
+    status("Computer's turn.");
+  }
 }
+
 function cePlay(){
-  if(ce.turn!=="player"||ce.over)return;
-  const i=Number($("ceCard").value),c=ce.player[i];
-  if(!c||!canPlay(c)){status("That card cannot be played.");return;}
-  ce.player.splice(i,1);ce.pile.push(c);
-  if(c.rank==="8"){
-    const s=prompt("Choose a suit: S for spades, H for hearts, D for diamonds, C for clubs","S");
-    ce.suit=({S:"♠",H:"♥",D:"♦",C:"♣"})[(s||"S").toUpperCase()]||"♠";
-  }else ce.suit=c.suit;
-  if(ce.player.length===0){ceEnd("You win Crazy Eights!");return;}
-  ce.turn="cpu";renderEights();
-}
-function ceDraw(){
-  if(ce.turn!=="player"||ce.over)return;
-  if(!ce.deck.length){status("The draw pile is empty.");return;}
-  ce.player.push(ce.deck.pop());ce.turn="cpu";renderEights();
-}
-function ceCpuTurn(){
-  if(ce.turn!=="cpu"||ce.over)return;
-  let i=ce.cpu.findIndex(canPlay);
-  if(i>=0){
-    let c=ce.cpu.splice(i,1)[0];ce.pile.push(c);
-    if(c.rank==="8")ce.suit=suits[Math.floor(Math.random()*4)];
-    else ce.suit=c.suit;
-    if(!ce.cpu.length){ceEnd("Computer wins Crazy Eights.");return;}
-  }else if(ce.deck.length)ce.cpu.push(ce.deck.pop());
-  ce.turn="player";renderEights();
-}
-function ceEnd(msg){
-  ce.over=true;status(msg);
-  if(msg.startsWith("You win"))$("gameInfo").textContent=rewardWin("eights");
+  if(ce.over||ce.turn!=="player")return;
+
+  const index=Number($("ceCard").value);
+  const card=ce.player[index];
+
+  if(!card||!ceCanPlay(card)){
+    status("That card cannot be played.");
+    return;
+  }
+
+  ce.player.splice(index,1);
+  ce.pile.push(card);
+
+  if(card.rank==="8"){
+    const choice=prompt(
+      "Choose a suit: S for Spades, H for Hearts, D for Diamonds, C for Clubs",
+      "S"
+    );
+
+    const choices={
+      S:"♠",H:"♥",D:"♦",C:"♣"
+    };
+
+    ce.suit=choices[(choice||"S").toUpperCase()]||"♠";
+  }else{
+    ce.suit=card.suit;
+  }
+
+  if(!ce.player.length){
+    ceEnd(true);
+    return;
+  }
+
+  ce.turn="cpu";
   renderEights();
 }
 
-/* -------------------------------------------------------
+function ceDraw(){
+  if(ce.over||ce.turn!=="player")return;
+
+  if(!ce.deck.length){
+    status("The draw pile is empty.");
+    return;
+  }
+
+  ce.player.push(ce.deck.pop());
+  ce.turn="cpu";
+  renderEights();
+}
+
+function ceCpuTurn(){
+  if(ce.over||ce.turn!=="cpu")return;
+
+  const index=ce.cpu.findIndex(ceCanPlay);
+
+  if(index>=0){
+    const card=ce.cpu.splice(index,1)[0];
+    ce.pile.push(card);
+
+    if(card.rank==="8"){
+      ce.suit=suits[Math.floor(Math.random()*4)];
+    }else{
+      ce.suit=card.suit;
+    }
+
+    if(!ce.cpu.length){
+      ceEnd(false);
+      return;
+    }
+  }else if(ce.deck.length){
+    ce.cpu.push(ce.deck.pop());
+  }
+
+  ce.turn="player";
+  renderEights();
+}
+
+function ceEnd(playerWins){
+  ce.over=true;
+
+  if(playerWins){
+    status("You win Crazy Eights!");
+    $("gameInfo").textContent=rewardWin("eights");
+  }else{
+    status("Computer wins Crazy Eights.");
+  }
+
+  renderEights();
+}
+
+/* =========================================
    OLD MAID
-   Remove pairs, then take a random card from the other hand.
-   The player left with the unmatched queen loses.
-------------------------------------------------------- */
+========================================= */
+
 let om={};
-function startOldMaid(){
-  let d=makeDeck();
-  d=d.filter(c=>!(c.rank==="K"&&c.suit==="♠"));
-  shuffle(d);
-  om={player:d.splice(0,Math.ceil(d.length/2)),cpu:d,turn:"player",over:false};
-  omRemovePairs(om.player);omRemovePairs(om.cpu);renderOldMaid();
-}
+
 function omRemovePairs(hand){
-  const counts={};hand.forEach(c=>counts[c.rank]=(counts[c.rank]||0)+1);
-  const remove={};Object.keys(counts).forEach(r=>{if(counts[r]>=2)remove[r]=Math.floor(counts[r]/2)*2;});
-  for(const r in remove){
-    let n=remove[r];hand=hand.filter(c=>{
-      if(c.rank===r&&n>0){n--;return false;}return true;
-    });
+  const remaining=[];
+  const counts={};
+
+  hand.forEach(c=>{
+    counts[c.rank]=(counts[c.rank]||0)+1;
+  });
+
+  const remove={};
+
+  for(const rank in counts){
+    remove[rank]=Math.floor(counts[rank]/2)*2;
   }
-  if(hand===om.player)om.player=hand;
-  else om.cpu=hand;
-  return hand;
+
+  hand.forEach(c=>{
+    if(remove[c.rank]>0){
+      remove[c.rank]--;
+    }else{
+      remaining.push(c);
+    }
+  });
+
+  return remaining;
 }
-function omRemovePlayerPairs(){
-  const before=om.player.length;
-  let counts={};om.player.forEach(c=>counts[c.rank]=(counts[c.rank]||0)+1);
-  for(const r in counts)if(counts[r]>=2){
-    let removed=0;
-    om.player=om.player.filter(c=>{if(c.rank===r&&removed<2){removed++;return false;}return true;});
-  }
-  return before-om.player.length;
+
+function startOldMaid(){
+  const deck=makeDeck().filter(c=>
+    !(c.rank==="K"&&c.suit==="♠")
+  );
+
+  shuffle(deck);
+
+  const player=[];
+  const cpu=[];
+
+  deck.forEach((c,i)=>{
+    if(i%2===0)player.push(c);
+    else cpu.push(c);
+  });
+
+  om={
+    player:omRemovePairs(player),
+    cpu:omRemovePairs(cpu),
+    turn:"player",
+    over:false
+  };
+
+  renderOldMaid();
 }
-function omRemoveCpuPairs(){
-  const before=om.cpu.length;
-  let counts={};om.cpu.forEach(c=>counts[c.rank]=(counts[c.rank]||0)+1);
-  for(const r in counts)if(counts[r]>=2){
-    let removed=0;
-    om.cpu=om.cpu.filter(c=>{if(c.rank===r&&removed<2){removed++;return false;}return true;});
-  }
-  return before-om.cpu.length;
-}
+
 function renderOldMaid(){
-  table(`<h3>Your Cards (${om.player.length})</h3>${showCards(om.player)}
+  table(`
+    <h3>Your Cards (${om.player.length})</h3>
+    ${showCards(om.player)}
+
     <h3>Computer Cards (${om.cpu.length})</h3>
-    <div class="hand">${om.cpu.map(()=>cardHTML({},true)).join("")}</div>`);
-  if(om.over){controls(`<button onclick="startOldMaid()">New Game</button>`);return;}
+    <div class="hand">
+      ${om.cpu.map(()=>cardHTML({},true)).join("")}
+    </div>
+
+    <p class="info">Match pairs of the same rank. The unmatched King is the Old Maid.</p>
+  `);
+
+  if(om.over){
+    controls(`<button onclick="startOldMaid()">New Game</button>`);
+    return;
+  }
+
   if(om.turn==="player"){
-    controls(`<label>Choose a card from the computer:
-      <select id="omPick">${om.cpu.map((c,i)=>`<option value="${i}">Card ${i+1}</option>`).join("")}</select>
-      </label><button onclick="omPlayerPick()">Pick Card</button>`);
-    status("Choose one hidden card from the computer's hand.");
+    controls(`
+      <label>Choose a hidden card:
+        <select id="omPick">
+          ${om.cpu.map((c,i)=>`<option value="${i}">Card ${i+1}</option>`).join("")}
+        </select>
+      </label>
+      <button onclick="omPlayerPick()">Pick Card</button>
+    `);
+    status("Pick a card from the computer.");
   }else{
     controls(`<button onclick="omCpuPick()">Continue</button>`);
-    status("Computer is choosing a card from your hand.");
+    status("Computer is choosing one of your cards.");
   }
 }
-function omPlayerPick(){
-  if(om.turn!=="player"||om.over||!om.cpu.length)return;
-  om.player.push(om.cpu.splice(Number($("omPick").value),1)[0]);
-  omRemovePlayerPairs();
-  omCheckEnd();
-  if(!om.over)om.turn="cpu";
-  renderOldMaid();
-}
-function omCpuPick(){
-  if(om.turn!=="cpu"||om.over||!om.player.length)return;
-  let i=Math.floor(Math.random()*om.player.length);
-  om.cpu.push(om.player.splice(i,1)[0]);
-  omRemoveCpuPairs();omCheckEnd();
-  if(!om.over)om.turn="player";
-  renderOldMaid();
-}
+
 function omCheckEnd(){
   if(om.player.length===0||om.cpu.length===0){
     om.over=true;
-    if(om.player.length===1&&om.player[0].rank==="Q"){
-      status("You are left with the Old Maid. Computer wins.");
-    }else if(om.cpu.length===1&&om.cpu[0].rank==="Q"){
-      status("Computer is left with the Old Maid. You win!");
+
+    if(om.player.length===1&&om.player[0].rank==="K"){
+      status("You have the Old Maid. Computer wins.");
+    }else if(om.cpu.length===1&&om.cpu[0].rank==="K"){
+      status("Computer has the Old Maid. You win!");
       $("gameInfo").textContent=rewardWin("oldmaid");
-    }else status("The game is complete.");
+    }else{
+      status("The game is complete.");
+    }
+
+    return true;
   }
+
+  return false;
 }
 
-/* -------------------------------------------------------
-   KLONDIKE SOLITAIRE
-   Standard 7 tableau piles, four foundations, draw-one stock.
-   Build descending alternating colors in tableau; build
-   Ace to King by suit in foundation. Empty columns take Kings.
-------------------------------------------------------- */
-let sol={};
-function startSolitaire(){
-  let d=makeDeck(),piles=[];
-  for(let i=0;i<7;i++){
-    let pile=d.splice(0,i+1);
-    pile.forEach((c,j)=>c.faceUp=j===pile.length-1);
-    piles.push(pile);
+function omPlayerPick(){
+  if(om.over||om.turn!=="player"||!om.cpu.length)return;
+
+  const index=Number($("omPick").value);
+
+  om.player.push(om.cpu.splice(index,1)[0]);
+  om.player=omRemovePairs(om.player);
+
+  if(omCheckEnd()){
+    renderOldMaid();
+    return;
   }
-  sol={deck:d,stock:d,tableau:piles,foundation:[[],[],[],[]],waste:[],moves:0,over:false};
+
+  om.turn="cpu";
+  renderOldMaid();
+}
+
+function omCpuPick(){
+  if(om.over||om.turn!=="cpu"||!om.player.length)return;
+
+  const index=Math.floor(Math.random()*om.player.length);
+
+  om.cpu.push(om.player.splice(index,1)[0]);
+  om.cpu=omRemovePairs(om.cpu);
+
+  if(omCheckEnd()){
+    renderOldMaid();
+    return;
+  }
+
+  om.turn="player";
+  renderOldMaid();
+}
+
+/* =========================================
+   KLONDIKE SOLITAIRE
+   Draw-one stock, seven tableau columns,
+   four foundations, and movable sequences.
+========================================= */
+
+let sol={};
+
+function startSolitaire(){
+  const deck=makeDeck();
+  const tableau=[];
+
+  for(let i=0;i<7;i++){
+    const pile=deck.splice(0,i+1);
+
+    pile.forEach((card,j)=>{
+      card.faceUp=j===pile.length-1;
+    });
+
+    tableau.push(pile);
+  }
+
+  sol={
+    stock:deck,
+    waste:[],
+    tableau,
+    foundation:[[],[],[],[]],
+    selected:null,
+    moves:0,
+    over:false
+  };
+
   renderSolitaire();
 }
-function solColor(c){return c.suit==="♥"||c.suit==="♦"?"red":"black";}
-function solCanTableau(c,pile){
-  if(!pile.length)return c.rank==="K";
-  let top=pile[pile.length-1];
-  return top.faceUp&&solColor(top)!==solColor(c)&&c.value===top.value-1;
+
+function solColor(card){
+  return ["♥","♦"].includes(card.suit)?"red":"black";
 }
-function solCanFoundation(c,pile){
-  if(!pile.length)return c.rank==="A";
-  return pile[pile.length-1].suit===c.suit&&c.value===pile[pile.length-1].value+1;
+
+function solCanTableau(card,pile){
+  if(!pile.length)return card.rank==="K";
+
+  const top=pile[pile.length-1];
+
+  return top.faceUp&&
+    solColor(top)!==solColor(card)&&
+    card.value===top.value-1;
 }
-function solRenderCard(c){
-  return cardHTML(c,!c.faceUp);
+
+function solCanFoundation(card,pile){
+  if(!pile.length)return card.rank==="A";
+
+  const top=pile[pile.length-1];
+
+  return top.suit===card.suit&&
+    card.value===top.value+1;
 }
-function renderSolitaire(){
-  let html=`<div><h3>Stock</h3><div class="hand">${sol.stock.length?'<div class="playing-card back"></div>':"Empty"}</div>
-    <h3>Waste</h3>${sol.waste.length?showCards([sol.waste[sol.waste.length-1]]):"Empty"}
-    <h3>Foundations</h3><div class="hand">`;
-  sol.foundation.forEach((p,i)=>html+=`<div style="min-width:65px"><p class="info">${suits[i]}</p>${p.length?cardHTML(p[p.length-1]):"Empty"}</div>`);
-  html+=`</div><h3>Tableau</h3><div style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px">`;
-  sol.tableau.forEach((p,i)=>{
-    html+=`<div style="min-height:110px;border:1px dashed #ffffff55;border-radius:6px;padding:4px">
-      <div class="info">Column ${i+1}</div>
-      ${p.map((c,j)=>`<div style="margin-top:${j?'-43px':'0'};position:relative">${solRenderCard(c)}</div>`).join("")}
-    </div>`;
-  });
-  html+="</div></div>";
-  table(html);
-  controls(`<button onclick="solDraw()">Draw / Recycle Stock</button>
-    <button class="secondary" onclick="solUndoHint()">Show Move Instructions</button>
-    <button class="secondary" onclick="startSolitaire()">New Game</button>`);
-  status("Select a card in the tableau or waste, then choose a destination.");
-  $("gameInfo").innerHTML=`Moves: ${sol.moves}<br>
-    <label>Source:
-      <select id="solSource">
-        <option value="w">Waste</option>
-        ${sol.tableau.map((p,i)=>`<option value="${i}">Column ${i+1}</option>`).join("")}
-      </select>
-    </label>
-    <label>Destination:
-      <select id="solDest">
-        ${sol.tableau.map((p,i)=>`<option value="t${i}">Column ${i+1}</option>`).join("")}
-        ${sol.foundation.map((p,i)=>`<option value="f${i}">Foundation ${i+1}</option>`).join("")}
-      </select>
-    </label>
-    <button class="small" onclick="solMove()">Move Selected Card</button>`;
+
+function solGetSelection(){
+  if(!sol.selected)return null;
+
+  const s=sol.selected;
+
+  if(s.type==="w"){
+    if(!sol.waste.length)return null;
+
+    return {
+      pile:sol.waste,
+      index:sol.waste.length-1
+    };
+  }
+
+  if(s.type==="t"){
+    const pile=sol.tableau[s.column];
+
+    if(!pile||!pile[s.index])return null;
+
+    return {pile,index:s.index};
+  }
+
+  return null;
 }
+
+function solSelectWaste(){
+  if(sol.over||!sol.waste.length)return;
+
+  sol.selected={
+    type:"w",
+    index:sol.waste.length-1
+  };
+
+  renderSolitaire();
+}
+
+function solSelectTableau(column,index){
+  if(sol.over)return;
+
+  const pile=sol.tableau[column];
+
+  if(!pile[index]||!pile[index].faceUp)return;
+
+  sol.selected={
+    type:"t",
+    column,
+    index
+  };
+
+  renderSolitaire();
+}
+
+function solMoveToTableau(column){
+  if(sol.over)return;
+
+  const selection=solGetSelection();
+
+  if(!selection){
+    status("Select a face-up card first.");
+    return;
+  }
+
+  const from=selection.pile;
+  const index=selection.index;
+  const moving=from.slice(index);
+  const card=moving[0];
+  const destination=sol.tableau[column];
+
+  if(from===destination){
+    sol.selected=null;
+    renderSolitaire();
+    return;
+  }
+
+  if(!solCanTableau(card,destination)){
+    status("Invalid move. Build descending with alternating colors. Only Kings go in empty columns.");
+    return;
+  }
+
+  from.splice(index);
+  destination.push(...moving);
+
+  if(from!==sol.waste&&from.length){
+    from[from.length-1].faceUp=true;
+  }
+
+  sol.selected=null;
+  sol.moves++;
+
+  solCheckWin();
+  renderSolitaire();
+}
+
+function solMoveToFoundation(){
+  if(sol.over)return;
+
+  const selection=solGetSelection();
+
+  if(!selection){
+    status("Select a card first.");
+    return;
+  }
+
+  const from=selection.pile;
+  const index=selection.index;
+
+  if(index!==from.length-1){
+    status("Only one card at a time can move to a foundation.");
+    return;
+  }
+
+  const card=from[index];
+  const foundationIndex=suits.indexOf(card.suit);
+  const destination=sol.foundation[foundationIndex];
+
+  if(!solCanFoundation(card,destination)){
+    status("Foundations must build upward from Ace to King in the same suit.");
+    return;
+  }
+
+  from.pop();
+  destination.push(card);
+
+  if(from!==sol.waste&&from.length){
+    from[from.length-1].faceUp=true;
+  }
+
+  sol.selected=null;
+  sol.moves++;
+
+  solCheckWin();
+  renderSolitaire();
+}
+
 function solDraw(){
   if(sol.over)return;
+
+  sol.selected=null;
+
   if(sol.stock.length){
-    let c=sol.stock.pop();c.faceUp=true;sol.waste.push(c);
+    const card=sol.stock.pop();
+    card.faceUp=true;
+    sol.waste.push(card);
   }else if(sol.waste.length){
-    sol.stock=sol.waste.reverse();sol.waste=[];
+    sol.stock=sol.waste.reverse();
+    sol.waste=[];
     sol.stock.forEach(c=>c.faceUp=false);
-  }
-  sol.moves++;renderSolitaire();
-}
-function solGetSource(src){
-  if(src==="w")return sol.waste;
-  return sol.tableau[Number(src)];
-}
-function solMove(){
-  if(sol.over)return;
-  let src=$("solSource").value,dest=$("solDest").value;
-  let from=solGetSource(src);
-  if(!from||!from.length){status("There is no card in that source.");return;}
-  let index=src==="w"?from.length-1:from.findIndex(c=>c.faceUp);
-  if(index<0){status("No face-up card available.");return;}
-  let moving=from.slice(index),card=moving[0];
-  if(dest[0]==="t"){
-    let n=Number(dest.slice(1)),to=sol.tableau[n];
-    if(src!=="w"&&Number(src)===n){status("Choose a different column.");return;}
-    if(!solCanTableau(card,to)){status("That card cannot go there. Build descending with alternating colors.");return;}
-    from.splice(index);
-    to.push(...moving);
-    if(src!=="w"&&from.length)from[from.length-1].faceUp=true;
   }else{
-    if(moving.length!==1){status("Only one card can be moved to a foundation.");return;}
-    let n=Number(dest.slice(1)),to=sol.foundation[n];
-    if(!solCanFoundation(card,to)){status("Foundations build upward from Ace to King in the same suit.");return;}
-    from.pop();to.push(card);
-    if(src!=="w"&&from.length)from[from.length-1].faceUp=true;
+    status("No cards remain in the stock or waste.");
+    return;
   }
+
   sol.moves++;
-  if(sol.foundation.every(p=>p.length===13)){
-    sol.over=true;status("You completed Solitaire!");$("gameInfo").textContent=rewardWin("solitaire");
-  }
   renderSolitaire();
 }
-function solUndoHint(){
-  status("Tableau: descending order, alternating colors. Foundations: Ace through King, same suit. Only Kings may fill empty columns.");
+
+function solCheckWin(){
+  if(sol.foundation.every(p=>p.length===13)){
+    sol.over=true;
+    status("Congratulations! You completed Solitaire!");
+    $("gameInfo").textContent=rewardWin("solitaire");
+  }
 }
 
-/* -------------------------------------------------------
-   INITIAL THEME RESTORE
-------------------------------------------------------- */
+function solRenderPile(pile,column){
+  if(!pile.length){
+    return `
+      <button class="secondary small"
+        onclick="solMoveToTableau(${column})"
+        style="width:100%;height:75px">Empty</button>
+    `;
+  }
+
+  return pile.map((card,index)=>{
+    const selected=sol.selected&&
+      sol.selected.type==="t"&&
+      sol.selected.column===column&&
+      index>=sol.selected.index;
+
+    return `
+      <div class="sol-card ${selected?"selected":""}">
+        <button onclick="solSelectTableau(${column},${index})">
+          ${cardHTML(card,!card.faceUp)}
+        </button>
+      </div>
+    `;
+  }).join("");
+}
+
+function renderSolitaire(){
+  let html=`
+    <h3>Stock and Waste</h3>
+
+    <div class="hand">
+      <div>
+        <p class="info">Stock (${sol.stock.length})</p>
+        <button onclick="solDraw()">
+          ${sol.stock.length?'<div class="playing-card back"></div>':"Recycle"}
+        </button>
+      </div>
+
+      <div>
+        <p class="info">Waste</p>
+        ${sol.waste.length?`
+          <button onclick="solSelectWaste()">
+            ${cardHTML(sol.waste[sol.waste.length-1])}
+          </button>
+        `:'<div class="playing-card">Empty</div>'}
+      </div>
+    </div>
+
+    <h3>Foundations</h3>
+    <div class="hand">
+      ${sol.foundation.map((pile,i)=>`
+        <div>
+          <p class="info">${suits[i]}</p>
+          ${pile.length?cardHTML(pile[pile.length-1]):'<div class="playing-card">Empty</div>'}
+        </div>
+      `).join("")}
+    </div>
+
+    <h3>Tableau</h3>
+
+    <div class="solitaire-columns">
+      ${sol.tableau.map((pile,i)=>`
+        <div class="solitaire-column">
+          <p class="info">${i+1}</p>
+          ${solRenderPile(pile,i)}
+        </div>
+      `).join("")}
+    </div>
+  `;
+
+  table(html);
+
+  controls(`
+    <button onclick="solDraw()">Draw / Recycle Stock</button>
+    <button onclick="solMoveToFoundation()">Move to Foundation</button>
+    <button class="secondary" onclick="startSolitaire()">New Game</button>
+  `);
+
+  status(sol.over?"Game completed!":"Select a face-up card, then choose a destination column or foundation.");
+
+  $("gameInfo").innerHTML=`
+    <p>Moves: ${sol.moves}</p>
+    <p class="info">
+      Rules: Build descending sequences with alternating colors.
+      Move Aces to foundations, then build upward by suit.
+      Empty columns can only be filled with Kings.
+      You can move a complete face-up sequence together.
+    </p>
+  `;
+}
+
+/* =========================================
+   END OF CARDHOUSE
+========================================= */
 </script>
 </body>
 </html>
