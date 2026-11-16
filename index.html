@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -306,6 +305,83 @@ input,select{
   outline:3px solid var(--gold-light);
   border-radius:7px;
 }
+
+/* Garbage */
+.gb-grid{
+  display:grid;
+  grid-template-columns:repeat(5,auto);
+  justify-content:center;
+  gap:8px;
+  margin:12px 0;
+}
+.gb-slot{text-align:center}
+.gb-label{
+  font-size:13px;
+  color:var(--gold-light);
+  margin-bottom:3px;
+}
+.gb-slot button{
+  display:block;
+  padding:0;
+  background:none;
+  border:0;
+  margin:0 auto;
+}
+.gb-slot button .playing-card{outline:3px dashed var(--gold-light)}
+.gb-slot.done .playing-card{box-shadow:0 0 0 3px #76e7a1,0 3px 7px #0008}
+
+/* Color Clash */
+.cc-card{
+  width:65px;
+  height:92px;
+  border-radius:8px;
+  border:3px solid #fff;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  padding:5px;
+  font-family:Arial,sans-serif;
+  font-weight:bold;
+  color:#fff;
+  box-shadow:0 3px 7px #0008;
+  flex-shrink:0;
+  text-shadow:0 1px 2px #0006;
+}
+.cc-card.red{background:#c52832}
+.cc-card.yellow{background:#e1b100;color:#2a2200;text-shadow:none}
+.cc-card.green{background:#2e9d4f}
+.cc-card.blue{background:#2563c7}
+.cc-card.wild{
+  background:conic-gradient(#c52832 0 25%,#e1b100 0 50%,#2e9d4f 0 75%,#2563c7 0);
+}
+.cc-corner{font-size:14px;text-align:left}
+.cc-corner.bot{text-align:right;transform:rotate(180deg)}
+.cc-mid{font-size:26px;text-align:center}
+.cc-hand button{
+  padding:0;
+  background:none;
+  border:0;
+  transition:transform .15s;
+}
+.cc-hand button:hover:not(:disabled){transform:translateY(-6px);filter:none}
+.cc-chip{
+  display:inline-block;
+  padding:3px 12px;
+  border-radius:12px;
+  font-size:14px;
+  font-weight:bold;
+  color:#fff;
+}
+.cc-chip.red{background:#c52832}
+.cc-chip.yellow{background:#e1b100;color:#2a2200}
+.cc-chip.green{background:#2e9d4f}
+.cc-chip.blue{background:#2563c7}
+button.cc-pick{color:#fff;border:2px solid #fff}
+button.cc-pick.red{background:#c52832}
+button.cc-pick.yellow{background:#e1b100;color:#2a2200}
+button.cc-pick.green{background:#2e9d4f}
+button.cc-pick.blue{background:#2563c7}
+
 footer{
   text-align:center;
   color:var(--muted);
@@ -318,6 +394,9 @@ footer{
   main{padding:22px 4%}
   .playing-card{width:53px;height:78px;font-size:14px}
   .playing-card .center{font-size:20px}
+  .cc-card{width:53px;height:78px}
+  .cc-mid{font-size:20px}
+  .gb-grid{gap:4px}
   .table{padding:12px}
   .roulette-grid{gap:2px}
   .roulette-cell{min-height:32px;font-size:12px}
@@ -402,6 +481,8 @@ const games = [
   ["war","⚔","War","Draw cards against the computer. The higher card wins."],
   ["gofish","🐟","Go Fish","Collect books of four matching ranks."],
   ["eights","♥","Crazy Eights","Match suits or ranks and be the first to empty your hand."],
+  ["colorclash","🌈","Color Clash","Match colors or numbers, play action cards, and be first to empty your hand."],
+  ["garbage","🗑","Garbage","Flip cards into their numbered spots and be first to fill every position."],
   ["oldmaid","🃏","Old Maid","Match pairs and avoid being left with the Old Maid."],
   ["solitaire","♣","Klondike Solitaire","Build four foundations from Ace to King."]
 ];
@@ -534,6 +615,8 @@ function startGame(id){
     war:startWar,
     gofish:startGoFish,
     eights:startEights,
+    colorclash:startColorClash,
+    garbage:startGarbage,
     oldmaid:startOldMaid,
     solitaire:startSolitaire
   };
@@ -1474,6 +1557,684 @@ function ceEnd(playerWins){
     status("Computer wins Crazy Eights.");
   }
   renderEights();
+}
+
+/* =========================================
+   COLOR CLASH
+   An original color-matching game for you
+   versus the computer. Match the color or the
+   number/symbol of the top card. Action cards:
+   Skip, Reverse (acts as Skip with two players),
+   Draw Two, Wild, and Wild Draw Four.
+========================================= */
+
+let cc={};
+const ccColors=["red","yellow","green","blue"];
+
+function ccMakeDeck(){
+  const deck=[];
+  ccColors.forEach(color=>{
+    deck.push({color,kind:"num",n:0,label:"0"});
+    for(let n=1;n<=9;n++){
+      deck.push({color,kind:"num",n,label:String(n)});
+      deck.push({color,kind:"num",n,label:String(n)});
+    }
+    for(let k=0;k<2;k++){
+      deck.push({color,kind:"skip",n:null,label:"⊘"});
+      deck.push({color,kind:"reverse",n:null,label:"⇄"});
+      deck.push({color,kind:"draw2",n:null,label:"+2"});
+    }
+  });
+  for(let k=0;k<4;k++){
+    deck.push({color:"wild",kind:"wild",n:null,label:"W"});
+    deck.push({color:"wild",kind:"wild4",n:null,label:"+4"});
+  }
+  return shuffle(deck);
+}
+
+function startColorClash(){
+  const deck=ccMakeDeck();
+  const hands={player:deck.splice(0,7),cpu:deck.splice(0,7)};
+  while(deck[deck.length-1].kind!=="num"){
+    deck.unshift(deck.pop());
+  }
+  const first=deck.pop();
+  cc={
+    deck,
+    discard:[first],
+    hands,
+    color:first.color,
+    turn:"player",
+    over:false,
+    winner:null,
+    drawn:null,
+    pendingWild:null,
+    reward:"",
+    log:["The game begins. Match the color or the number."]
+  };
+  renderColorClash();
+}
+
+function ccPlayable(who,card){
+  const top=cc.discard[cc.discard.length-1];
+  if(card.kind==="wild")return true;
+  if(card.kind==="wild4"){
+    return !cc.hands[who].some(c=>c.color===cc.color);
+  }
+  if(card.color===cc.color)return true;
+  if(top.color!=="wild"&&
+     card.kind===top.kind&&
+     (card.kind!=="num"||card.n===top.n))return true;
+  return false;
+}
+
+function ccDrawCard(who){
+  if(!cc.deck.length&&cc.discard.length>1){
+    const top=cc.discard.pop();
+    cc.deck=shuffle(cc.discard);
+    cc.discard=[top];
+  }
+  if(!cc.deck.length)return null;
+  const card=cc.deck.pop();
+  cc.hands[who].push(card);
+  return card;
+}
+
+function ccDrawN(who,n){
+  let got=0;
+  for(let i=0;i<n;i++){
+    if(ccDrawCard(who))got++;
+  }
+  return got;
+}
+
+function ccDescribe(card){
+  if(card.kind==="wild")return "a Wild";
+  if(card.kind==="wild4")return "a Wild Draw Four";
+  const names={skip:"Skip",reverse:"Reverse",draw2:"Draw Two"};
+  return `${card.color} ${card.kind==="num"?card.n:names[card.kind]}`;
+}
+
+function ccPlayCard(who,card,color){
+  const hand=cc.hands[who];
+  const idx=hand.indexOf(card);
+  if(idx<0)return;
+  hand.splice(idx,1);
+  cc.discard.push(card);
+  cc.drawn=null;
+  cc.pendingWild=null;
+  cc.color=card.color==="wild"?color:card.color;
+
+  const name=who==="player"?"You":"The computer";
+  const other=who==="player"?"cpu":"player";
+  const otherName=other==="player"?"You":"The computer";
+  const loseVerb=other==="player"?"lose":"loses";
+  const drawVerb=other==="player"?"draw":"draws";
+
+  let text=`${name} ${who==="player"?"play":"plays"} ${ccDescribe(card)}.`;
+  if(card.color==="wild")text+=` The color is now ${cc.color.toUpperCase()}.`;
+
+  if(!hand.length){
+    cc.over=true;
+    cc.winner=who;
+    cc.log.push(text);
+    if(who==="player"){
+      cc.reward=rewardWin("colorclash");
+      cc.log.push("You played your last card — you win!");
+    }else{
+      cc.log.push("The computer played its last card and wins.");
+    }
+    return;
+  }
+
+  let again=false;
+  if(card.kind==="skip"||card.kind==="reverse"){
+    again=true;
+    text+=` ${otherName} ${loseVerb} a turn.`;
+  }else if(card.kind==="draw2"){
+    const n=ccDrawN(other,2);
+    again=true;
+    text+=` ${otherName} ${drawVerb} ${n} cards and ${loseVerb} a turn.`;
+  }else if(card.kind==="wild4"){
+    const n=ccDrawN(other,4);
+    again=true;
+    text+=` ${otherName} ${drawVerb} ${n} cards and ${loseVerb} a turn.`;
+  }
+  cc.log.push(text);
+
+  if(hand.length===1){
+    cc.log.push(`${name} ${who==="player"?"have":"has"} one card left!`);
+  }
+  cc.turn=again?who:other;
+}
+
+function ccPlay(index){
+  if(cc.over||cc.turn!=="player"||cc.pendingWild!==null)return;
+  const card=cc.hands.player[index];
+  if(!card)return;
+  if(cc.drawn&&card!==cc.drawn){
+    status("After drawing, you may only play the card you drew, or pass.");
+    return;
+  }
+  if(!ccPlayable("player",card)){
+    status(card.kind==="wild4"
+      ? "A Wild Draw Four can only be played when you have no card of the current color."
+      : "That card can't be played. Match the color or number, or play a wild card.");
+    return;
+  }
+  cc.log=[];
+  if(card.color==="wild"){
+    cc.pendingWild=index;
+    renderColorClash();
+    return;
+  }
+  ccPlayCard("player",card,null);
+  renderColorClash();
+}
+
+function ccChooseColor(color){
+  if(cc.pendingWild===null)return;
+  const card=cc.hands.player[cc.pendingWild];
+  cc.log=[];
+  ccPlayCard("player",card,color);
+  renderColorClash();
+}
+
+function ccCancelWild(){
+  cc.pendingWild=null;
+  renderColorClash();
+}
+
+function ccHumanDraw(){
+  if(cc.over||cc.turn!=="player"||cc.drawn||cc.pendingWild!==null)return;
+  const card=ccDrawCard("player");
+  cc.log=[];
+  if(!card){
+    cc.log.push("No cards are left to draw. You pass.");
+    cc.turn="cpu";
+  }else if(ccPlayable("player",card)){
+    cc.drawn=card;
+    cc.log.push("You drew a card you can play. Play it, or pass.");
+  }else{
+    cc.log.push("You drew a card that can't be played. Your turn ends.");
+    cc.turn="cpu";
+  }
+  renderColorClash();
+}
+
+function ccPass(){
+  if(!cc.drawn||cc.turn!=="player")return;
+  cc.drawn=null;
+  cc.log=["You pass."];
+  cc.turn="cpu";
+  renderColorClash();
+}
+
+function ccBestColor(){
+  const counts={red:0,yellow:0,green:0,blue:0};
+  cc.hands.cpu.forEach(c=>{
+    if(counts[c.color]!==undefined)counts[c.color]++;
+  });
+  let best=ccColors[Math.floor(Math.random()*4)];
+  let max=0;
+  ccColors.forEach(c=>{
+    if(counts[c]>max){max=counts[c];best=c;}
+  });
+  return best;
+}
+
+function ccCpuTurn(){
+  if(cc.over||cc.turn!=="cpu")return;
+  cc.log=[];
+  let playable=cc.hands.cpu.filter(c=>ccPlayable("cpu",c));
+
+  if(!playable.length){
+    const drawn=ccDrawCard("cpu");
+    cc.log.push("The computer draws a card.");
+    if(drawn&&ccPlayable("cpu",drawn)){
+      playable=[drawn];
+    }else{
+      cc.turn="player";
+      renderColorClash();
+      return;
+    }
+  }
+
+  const nonWild=playable.filter(c=>c.color!=="wild");
+  const pool=nonWild.length?nonWild:playable;
+  const actions=pool.filter(c=>c.kind!=="num");
+  const source=(actions.length&&Math.random()<0.6)?actions:pool;
+  const card=source[Math.floor(Math.random()*source.length)];
+  const color=card.color==="wild"?ccBestColor():null;
+
+  ccPlayCard("cpu",card,color);
+  renderColorClash();
+}
+
+function ccCardHTML(card){
+  return `
+    <div class="cc-card ${card.color}">
+      <span class="cc-corner">${card.label}</span>
+      <span class="cc-mid">${card.label}</span>
+      <span class="cc-corner bot">${card.label}</span>
+    </div>
+  `;
+}
+
+function renderColorClash(){
+  const top=cc.discard[cc.discard.length-1];
+  const myTurn=!cc.over&&cc.turn==="player"&&cc.pendingWild===null;
+  const hasMove=cc.hands.player.some(c=>ccPlayable("player",c));
+  const cpuCount=cc.hands.cpu.length;
+
+  table(`
+    <h3>Computer — ${cpuCount} card${cpuCount===1?"":"s"}</h3>
+    <div class="hand">
+      ${cc.hands.cpu.slice(0,14).map(()=>cardHTML({},true)).join("")}
+    </div>
+
+    <div class="hand">
+      <div>
+        <p class="info">Draw pile (${cc.deck.length})</p>
+        <div class="playing-card back"></div>
+      </div>
+      <div>
+        <p class="info">Discard</p>
+        ${ccCardHTML(top)}
+      </div>
+    </div>
+    <p class="score">
+      Current color:
+      <span class="cc-chip ${cc.color}">${cc.color.toUpperCase()}</span>
+    </p>
+
+    <h3>Your Hand</h3>
+    <div class="hand cc-hand">
+      ${cc.hands.player.map((c,i)=>{
+        const ok=myTurn&&(!cc.drawn||c===cc.drawn)&&ccPlayable("player",c);
+        return `<button onclick="ccPlay(${i})" ${ok?"":"disabled"}>${ccCardHTML(c)}</button>`;
+      }).join("")}
+    </div>
+  `);
+
+  if(cc.over){
+    controls(`<button onclick="startColorClash()">New Game</button>`);
+  }else if(cc.pendingWild!==null){
+    controls(`
+      <span class="info">Choose a color:</span>
+      ${ccColors.map(c=>`
+        <button class="cc-pick ${c}" onclick="ccChooseColor('${c}')">
+          ${c.charAt(0).toUpperCase()+c.slice(1)}
+        </button>
+      `).join("")}
+      <button class="secondary" onclick="ccCancelWild()">Cancel</button>
+    `);
+  }else if(cc.turn==="player"){
+    controls(`
+      <button onclick="ccHumanDraw()" ${cc.drawn?"disabled":""}>Draw Card</button>
+      ${cc.drawn?'<button class="secondary" onclick="ccPass()">Pass</button>':""}
+    `);
+  }else{
+    controls(`<button onclick="ccCpuTurn()">Continue</button>`);
+  }
+
+  let prompt="";
+  if(!cc.over){
+    if(cc.turn==="cpu")prompt="Computer's turn.";
+    else if(cc.pendingWild!==null)prompt="Choose a color for your wild card.";
+    else if(cc.drawn)prompt="Play the card you drew, or pass.";
+    else prompt=hasMove?"Your turn.":"You have no playable card — draw one.";
+  }
+  status((cc.log.slice(-3).join(" ")+" "+prompt).trim());
+
+  $("gameInfo").innerHTML=`
+    ${cc.reward?`<p>${cc.reward}</p>`:""}
+    <p class="info">
+      Rules: Play a card that matches the color or the number/symbol of the top card.
+      Skip and Reverse make your opponent lose a turn. Draw Two makes them draw two cards and lose a turn.
+      Wild cards let you choose the color. A Wild Draw Four makes them draw four cards and lose a turn,
+      but you can only play it when you have no card of the current color.
+      If you can't play, draw a card; if it's playable you may play it. First to empty their hand wins.
+    </p>
+  `;
+}
+
+/* =========================================
+   GARBAGE (ALSO CALLED TRASH)
+   Each player has a row of face-down cards for
+   positions Ace (1) through 10. Draw a card and
+   put it in the position matching its number,
+   uncovering the card that was there. Jacks are
+   wild. Queens, Kings, and cards whose spot is
+   already filled are discarded, ending your turn.
+   Fill every position to win the round. The round
+   winner plays with one fewer card next round.
+========================================= */
+
+let gb={};
+
+function gbName(card){
+  return card.rank+card.suit;
+}
+
+function gbLabel(i){
+  return i===0?"A":String(i+1);
+}
+
+function startGarbage(){
+  gb={
+    sizes:{player:10,cpu:10},
+    round:1,
+    over:false,
+    reward:"",
+    log:[]
+  };
+  gbDeal("player");
+}
+
+function gbDeal(first){
+  gb.deck=makeDeck();
+  gb.discard=[];
+  gb.slots={player:[],cpu:[]};
+  ["player","cpu"].forEach(who=>{
+    for(let i=0;i<gb.sizes[who];i++){
+      gb.slots[who].push({card:gb.deck.pop(),up:false});
+    }
+  });
+  gb.turn=first;
+  gb.phase="draw";
+  gb.held=null;
+  gb.roundOver=false;
+  gb.winner=null;
+  gb.nextFirst=first;
+  gb.log=[`Round ${gb.round}: you play with ${gb.sizes.player} cards, the computer with ${gb.sizes.cpu}.`];
+  renderGarbage();
+}
+
+function gbFilled(who,i){
+  const s=gb.slots[who][i];
+  return s.up&&s.card.value===i+1;
+}
+
+function gbHoldsJack(who,i){
+  const s=gb.slots[who][i];
+  return s.up&&s.card.rank==="J";
+}
+
+function gbAllUp(who){
+  return gb.slots[who].every(s=>s.up);
+}
+
+function gbCanPlace(who,card){
+  const size=gb.slots[who].length;
+  if(card.rank==="J"){
+    for(let i=0;i<size;i++){
+      if(!gbFilled(who,i)&&!gbHoldsJack(who,i))return true;
+    }
+    return false;
+  }
+  if(card.value>10||card.value>size)return false;
+  return !gbFilled(who,card.value-1);
+}
+
+function gbPlace(who,card,i){
+  const slot=gb.slots[who][i];
+  const old=slot.card;
+  slot.card=card;
+  slot.up=true;
+  return old;
+}
+
+function gbEndTurn(who){
+  gb.turn=who==="player"?"cpu":"player";
+  gb.phase="draw";
+  gb.held=null;
+}
+
+function gbRoundWin(who){
+  gb.roundOver=true;
+  gb.winner=who;
+  if(gb.held){
+    gb.discard.push(gb.held);
+    gb.held=null;
+  }
+  gb.nextFirst=who==="player"?"cpu":"player";
+
+  if(gb.sizes[who]===1){
+    gb.over=true;
+    if(who==="player"){
+      gb.log.push("You filled every position with a single card — you win Garbage!");
+      gb.reward=rewardWin("garbage");
+    }else{
+      gb.log.push("The computer filled every position with a single card and wins Garbage.");
+    }
+  }else{
+    gb.sizes[who]--;
+    gb.log.push(
+      (who==="player"?"You win":"The computer wins")+
+      ` round ${gb.round}! `+
+      (who==="player"?"You now play":"It now plays")+
+      ` with ${gb.sizes[who]} cards.`
+    );
+  }
+}
+
+function gbStalemate(){
+  gb.roundOver=true;
+  gb.winner=null;
+  gb.nextFirst="player";
+  gb.held=null;
+  gb.log.push("The cards ran out. This round is a draw.");
+  renderGarbage();
+}
+
+function gbDrawCard(from){
+  if(from==="discard"&&gb.discard.length)return gb.discard.pop();
+  if(!gb.deck.length&&gb.discard.length>1){
+    const top=gb.discard.pop();
+    gb.deck=shuffle(gb.discard);
+    gb.discard=[top];
+  }
+  return gb.deck.length?gb.deck.pop():null;
+}
+
+function gbCpuJackSlot(){
+  const open=[];
+  const down=[];
+  gb.slots.cpu.forEach((s,i)=>{
+    if(gbFilled("cpu",i)||gbHoldsJack("cpu",i))return;
+    open.push(i);
+    if(!s.up)down.push(i);
+  });
+  const pool=down.length?down:open;
+  return pool[Math.floor(Math.random()*pool.length)];
+}
+
+function gbContinue(who){
+  const name=who==="player"?"You":"The computer";
+  const s=who==="player"?"":"s";
+
+  while(gb.held){
+    const card=gb.held;
+
+    if(!gbCanPlace(who,card)){
+      gb.discard.push(card);
+      gb.held=null;
+      gb.log.push(`${name} discard${s} ${gbName(card)}. Turn ends.`);
+      gbEndTurn(who);
+      return;
+    }
+
+    let index;
+    if(card.rank==="J"){
+      if(who==="player"){
+        gb.phase="jack";
+        gb.log.push("You hold a wild Jack. Click a position for it.");
+        return;
+      }
+      index=gbCpuJackSlot();
+    }else{
+      index=card.value-1;
+    }
+
+    const old=gbPlace(who,card,index);
+    gb.held=old;
+    gb.log.push(`${name} place${s} ${gbName(card)} in position ${gbLabel(index)} and uncover${s} ${gbName(old)}.`);
+
+    if(gbAllUp(who)){
+      gbRoundWin(who);
+      return;
+    }
+  }
+}
+
+function gbDraw(from){
+  if(gb.over||gb.roundOver||gb.turn!=="player"||gb.phase!=="draw")return;
+
+  if(from==="discard"){
+    const top=gb.discard[gb.discard.length-1];
+    if(!top||!gbCanPlace("player",top))return;
+  }
+
+  const card=gbDrawCard(from);
+  if(!card){
+    gbStalemate();
+    return;
+  }
+
+  gb.log=[`You draw ${gbName(card)} from the ${from==="discard"?"discard pile":"deck"}.`];
+  gb.held=card;
+  gb.phase="busy";
+  gbContinue("player");
+  renderGarbage();
+}
+
+function gbPlaceJack(i){
+  if(gb.over||gb.roundOver||gb.turn!=="player"||gb.phase!=="jack")return;
+  if(gbFilled("player",i)||gbHoldsJack("player",i))return;
+
+  const jack=gb.held;
+  const old=gbPlace("player",jack,i);
+  gb.held=old;
+  gb.phase="busy";
+  gb.log.push(`You place ${gbName(jack)} in position ${gbLabel(i)} and uncover ${gbName(old)}.`);
+
+  if(gbAllUp("player")){
+    gbRoundWin("player");
+    renderGarbage();
+    return;
+  }
+
+  gbContinue("player");
+  renderGarbage();
+}
+
+function gbCpuTurn(){
+  if(gb.over||gb.roundOver||gb.turn!=="cpu")return;
+
+  const top=gb.discard[gb.discard.length-1];
+  const from=(top&&gbCanPlace("cpu",top))?"discard":"deck";
+  const card=gbDrawCard(from);
+
+  if(!card){
+    gbStalemate();
+    return;
+  }
+
+  gb.log=[`The computer draws ${gbName(card)} from the ${from==="discard"?"discard pile":"deck"}.`];
+  gb.held=card;
+  gb.phase="busy";
+  gbContinue("cpu");
+  renderGarbage();
+}
+
+function gbNextRound(){
+  if(gb.over)return;
+  gb.round++;
+  gbDeal(gb.nextFirst);
+}
+
+function gbSlotsHTML(who,pickable){
+  return `<div class="gb-grid">${
+    gb.slots[who].map((s,i)=>{
+      const filled=gbFilled(who,i);
+      const open=pickable&&!filled&&!gbHoldsJack(who,i);
+      const inner=`<div class="gb-label">${gbLabel(i)}</div>${cardHTML(s.card,!s.up)}`;
+      return `
+        <div class="gb-slot ${filled?"done":""}">
+          ${open?`<button onclick="gbPlaceJack(${i})">${inner}</button>`:inner}
+        </div>
+      `;
+    }).join("")
+  }</div>`;
+}
+
+function renderGarbage(){
+  const top=gb.discard[gb.discard.length-1];
+  const held=gb.held
+    ? `<h3>${gb.turn==="player"?"You're holding":"The computer is holding"}</h3>${showCards([gb.held])}`
+    : "";
+
+  table(`
+    <h3>Computer — ${gb.sizes.cpu} cards</h3>
+    ${gbSlotsHTML("cpu",false)}
+
+    <p class="score">Round ${gb.round}</p>
+    <div class="hand">
+      <div>
+        <p class="info">Draw pile (${gb.deck.length})</p>
+        <div class="playing-card back"></div>
+      </div>
+      <div>
+        <p class="info">Discard</p>
+        ${top?cardHTML(top):'<div class="playing-card">Empty</div>'}
+      </div>
+    </div>
+    ${held}
+
+    <h3>You — ${gb.sizes.player} cards</h3>
+    ${gbSlotsHTML("player",gb.phase==="jack"&&!gb.roundOver)}
+  `);
+
+  if(gb.over){
+    controls(`<button onclick="startGarbage()">New Game</button>`);
+  }else if(gb.roundOver){
+    controls(`<button onclick="gbNextRound()">Next Round</button>`);
+  }else if(gb.turn==="player"&&gb.phase==="draw"){
+    const canTake=top&&gbCanPlace("player",top);
+    controls(`
+      <button onclick="gbDraw('deck')">Draw from Deck</button>
+      <button class="secondary" onclick="gbDraw('discard')" ${canTake?"":"disabled"}>
+        Take Discard${top?" ("+gbName(top)+")":""}
+      </button>
+    `);
+  }else if(gb.turn==="cpu"){
+    controls(`<button onclick="gbCpuTurn()">Continue</button>`);
+  }else{
+    controls("");
+  }
+
+  let prompt="";
+  if(!gb.over&&!gb.roundOver){
+    if(gb.turn==="cpu")prompt="Computer's turn.";
+    else if(gb.phase==="jack")prompt="Choose a position for your Jack.";
+    else prompt="Your turn. Draw from the deck, or take the discard if you can use it.";
+  }else if(gb.roundOver&&!gb.over){
+    prompt="Press Next Round to continue.";
+  }
+  status((gb.log.slice(-4).join(" ")+" "+prompt).trim());
+
+  $("gameInfo").innerHTML=`
+    ${gb.reward?`<p>${gb.reward}</p>`:""}
+    <p class="info">
+      Rules: Each row of cards is positions Ace (1) through 10, face down. Draw from the deck or take the
+      top discard if you can use it. A card goes in the position matching its number and uncovers the card
+      that was there, which you then play. Jacks are wild and can go in any open position. Queens, Kings,
+      and cards whose position is already filled are discarded, ending your turn. Fill every position to
+      win the round. The winner of each round plays with one fewer card next round. Win a round with a
+      single card to win the game. Green outlines show positions you've filled.
+    </p>
+  `;
 }
 
 /* =========================================
