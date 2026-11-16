@@ -3,673 +3,595 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Classic Card Games</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cardhouse Arcade</title>
 <style>
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
-body {
-    font-family: 'Segoe UI', sans-serif;
-    background: #101b17;
-    color: white;
-    min-height: 100vh;
-}
-
-header {
-    padding: 25px 7%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid #344b3e;
-}
-
-.logo {
-    font-size: 25px;
-    font-weight: bold;
-    color: #e5bd70;
-}
-
-.logo span {
-    color: white;
-}
-
-.header-tag {
-    color: #a9b9ae;
-    font-size: 13px;
-}
-
-.hero {
-    text-align: center;
-    padding: 65px 20px 35px;
-}
-
-.hero h1 {
-    font-size: clamp(35px, 6vw, 55px);
-    margin-bottom: 12px;
-}
-
-.hero h1 span {
-    color: #e5bd70;
-}
-
-.hero p {
-    color: #a9b9ae;
-    font-size: 16px;
-}
-
-.divider {
-    width: 65px;
-    height: 3px;
-    background: #d7ad61;
-    margin: 25px auto;
-}
-
-.games {
-    max-width: 1150px;
-    margin: auto;
-    padding: 20px;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-    gap: 22px;
-}
-
-.game-card {
-    background: #1c2d25;
-    border: 1px solid #344b3e;
-    border-radius: 15px;
-    padding: 25px;
-    transition: .25s;
-    cursor: pointer;
-}
-
-.game-card:hover {
-    transform: translateY(-7px);
-    border-color: #d7ad61;
-    box-shadow: 0 10px 30px #0005;
-}
-
-.game-icon {
-    font-size: 48px;
-    margin-bottom: 18px;
-}
-
-.game-card h2 {
-    font-size: 21px;
-    margin-bottom: 9px;
-}
-
-.game-card p {
-    color: #a9b9ae;
-    font-size: 14px;
-    line-height: 1.5;
-    min-height: 45px;
-}
-
-.play-btn {
-    margin-top: 22px;
-    width: 100%;
-    padding: 12px;
-    background: #d7ad61;
-    color: #172019;
-    border: none;
-    border-radius: 7px;
-    font-weight: bold;
-    cursor: pointer;
-    font-size: 14px;
-}
-
-.play-btn:hover {
-    background: #f0cb83;
-}
-
-#gameScreen {
-    display: none;
-    max-width: 1000px;
-    margin: 35px auto;
-    padding: 20px;
-}
-
-.back-btn {
-    background: transparent;
-    color: #e5bd70;
-    border: 1px solid #d7ad61;
-    padding: 10px 18px;
-    border-radius: 7px;
-    cursor: pointer;
-    margin-bottom: 25px;
-}
-
-#gameTitle {
-    font-size: 32px;
-    margin-bottom: 10px;
-}
-
-#gameDescription {
-    color: #a9b9ae;
-    margin-bottom: 25px;
-}
-
-.table {
-    background: #145337;
-    border: 8px solid #563b25;
-    border-radius: 25px;
-    min-height: 350px;
-    padding: 30px;
-    text-align: center;
-    box-shadow: inset 0 0 30px #0005;
-}
-
-#gameArea {
-    margin: 25px 0;
-}
-
-.playing-card {
-    display: inline-flex;
-    width: 65px;
-    height: 95px;
-    background: white;
-    color: #171717;
-    border-radius: 8px;
-    margin: 5px;
-    align-items: center;
-    justify-content: center;
-    font-size: 23px;
-    font-weight: bold;
-    box-shadow: 0 3px 8px #0006;
-}
-
-.red {
-    color: #d32f2f;
-}
-
-.game-controls button {
-    padding: 12px 20px;
-    margin: 6px;
-    border: none;
-    border-radius: 7px;
-    background: #e5bd70;
-    color: #172019;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-.game-controls button:hover {
-    background: white;
-}
-
-#status {
-    margin-top: 20px;
-    color: #f2d99f;
-    font-size: 17px;
-    min-height: 25px;
-}
-
-footer {
-    text-align: center;
-    color: #718278;
-    padding: 45px 15px;
-    font-size: 13px;
-}
-
-@media(max-width:600px) {
-    header {
-        padding: 20px;
-    }
-
-    .table {
-        padding: 15px;
-    }
+*{box-sizing:border-box}
+body{margin:0;background:#101b17;color:white;font-family:Arial,sans-serif}
+header{padding:20px 5%;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #35483d}
+.logo{font-size:25px;font-weight:bold;color:#e5bd70}
+button{cursor:pointer;font-weight:bold;border:0;border-radius:7px;padding:11px 17px}
+.gold{background:#dfb968;color:#172019}
+.gold:hover{background:#f5d38b}
+.hero{text-align:center;padding:45px 15px}
+.hero h1{font-size:42px}
+.hero span{color:#dfb968}
+.hero p{color:#aab9ae}
+.games{max-width:1100px;margin:auto;padding:15px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px}
+.game{background:#1c2c24;border:1px solid #405648;padding:25px;border-radius:13px;cursor:pointer;transition:.2s}
+.game:hover{transform:translateY(-5px);border-color:#dfb968}
+.game .emoji{font-size:43px}
+.game h2{margin:15px 0 8px}
+.game p{color:#aab9ae;min-height:40px;font-size:14px;line-height:1.5}
+.game button{width:100%;margin-top:15px}
+#screen{display:none;max-width:1100px;margin:25px auto;padding:15px}
+.topbar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+#title{font-size:30px;margin:15px 0 5px}
+#instructions{color:#aab9ae;margin-bottom:20px}
+.table{background:#145337;border:8px solid #563c29;border-radius:22px;min-height:400px;padding:20px;overflow-x:auto}
+#board{min-height:240px}
+#status{text-align:center;color:#ffe0a1;font-size:17px;margin:20px 0;min-height:25px}
+.controls{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:15px}
+.controls button{background:#dfb968;color:#172019}
+.controls button:hover{background:white}
+.card{display:inline-flex;background:white;color:#181818;width:55px;height:78px;border-radius:7px;margin:4px;align-items:center;justify-content:center;font-size:20px;font-weight:bold;box-shadow:0 3px 6px #0005;cursor:pointer;user-select:none;vertical-align:middle}
+.card.red{color:#d32929}
+.card.back{background:linear-gradient(135deg,#183d6b,#102342);border:3px solid white;color:white}
+.card.selected{outline:4px solid #f1cb70;transform:translateY(-7px)}
+.card.small{width:43px;height:61px;font-size:16px;margin:2px}
+.zone{display:inline-block;vertical-align:top;margin:5px;min-width:65px;min-height:90px;text-align:center}
+.zone h4{font-size:12px;color:#d8e6dc;margin:4px}
+.rowcards{display:flex;justify-content:center;flex-wrap:wrap;gap:3px;margin:10px 0}
+.column{display:inline-flex;flex-direction:column;vertical-align:top;min-width:68px;min-height:120px;margin:3px}
+.column .card{margin:0 0 -49px 0}
+.column .card:last-child{margin-bottom:0}
+.placeholder{border:2px dashed #9db5a3;border-radius:7px;width:55px;height:78px;display:inline-flex;align-items:center;justify-content:center;color:#b5c8ba;margin:4px}
+.info{color:#c7d6cb;text-align:center;margin:12px}
+footer{text-align:center;color:#74857a;padding:35px}
+@media(max-width:600px){
+.hero h1{font-size:32px}
+.table{padding:10px}
+.card{width:44px;height:65px;font-size:17px}
+.column{min-width:49px}
+.column .card{margin-bottom:-42px}
 }
 </style>
 </head>
-
 <body>
 
 <header>
-    <div class="logo">♠ CARD<span>HOUSE</span></div>
-    <div class="header-tag">CLASSIC GAME COLLECTION</div>
+<div class="logo">♠ CARDHOUSE</div>
+<div style="color:#aab9ae;font-size:12px">CLASSIC CARD ARCADE</div>
 </header>
 
 <main id="menu">
+<section class="hero">
+<h1>Classic <span>Card Games</span></h1>
+<p>Choose a game and start playing.</p>
+</section>
+<section class="games">
+<div class="game" onclick="start('Blackjack')">
+<div class="emoji">♣️</div><h2>Blackjack</h2>
+<p>Get as close to 21 as possible without going over.</p>
+<button class="gold">Play Now →</button></div>
 
-    <section class="hero">
-        <h1>Classic <span>Card Games</span></h1>
-        <p>Your favorite card games, all in one place.</p>
-        <div class="divider"></div>
-    </section>
+<div class="game" onclick="start('War')">
+<div class="emoji">⚔️</div><h2>War</h2>
+<p>Play your cards and win by having the highest rank.</p>
+<button class="gold">Play Now →</button></div>
 
-    <section class="games">
+<div class="game" onclick="start('Go Fish')">
+<div class="emoji">🐟</div><h2>Go Fish</h2>
+<p>Ask for cards, collect pairs, and beat the computer.</p>
+<button class="gold">Play Now →</button></div>
 
-        <div class="game-card" onclick="startGame('Solitaire')">
-            <div class="game-icon">♠️</div>
-            <h2>Solitaire</h2>
-            <p>Build four foundation piles in ascending order.</p>
-            <button class="play-btn">Play Solitaire →</button>
-        </div>
+<div class="game" onclick="start('Crazy Eights')">
+<div class="emoji">♥️</div><h2>Crazy Eights</h2>
+<p>Match the suit or rank and get rid of your cards.</p>
+<button class="gold">Play Now →</button></div>
 
-        <div class="game-card" onclick="startGame('Blackjack')">
-            <div class="game-icon">♣️</div>
-            <h2>Blackjack</h2>
-            <p>Try to reach 21 without going over.</p>
-            <button class="play-btn">Play Blackjack →</button>
-        </div>
+<div class="game" onclick="start('Old Maid')">
+<div class="emoji">🃏</div><h2>Old Maid</h2>
+<p>Match pairs and avoid being left with the Old Maid.</p>
+<button class="gold">Play Now →</button></div>
 
-        <div class="game-card" onclick="startGame('Go Fish')">
-            <div class="game-icon">🐟</div>
-            <h2>Go Fish</h2>
-            <p>Collect matching pairs and ask for the cards you need.</p>
-            <button class="play-btn">Play Go Fish →</button>
-        </div>
-
-        <div class="game-card" onclick="startGame('War')">
-            <div class="game-icon">⚔️</div>
-            <h2>War</h2>
-            <p>Battle your opponent by playing the highest card.</p>
-            <button class="play-btn">Play War →</button>
-        </div>
-
-        <div class="game-card" onclick="startGame('Crazy Eights')">
-            <div class="game-icon">♥️</div>
-            <h2>Crazy Eights</h2>
-            <p>Match suits or numbers and get rid of your cards.</p>
-            <button class="play-btn">Play Crazy Eights →</button>
-        </div>
-
-        <div class="game-card" onclick="startGame('Old Maid')">
-            <div class="game-icon">🃏</div>
-            <h2>Old Maid</h2>
-            <p>Match cards and avoid getting stuck with the Old Maid.</p>
-            <button class="play-btn">Play Old Maid →</button>
-        </div>
-
-    </section>
+<div class="game" onclick="start('Solitaire')">
+<div class="emoji">♦️</div><h2>Solitaire</h2>
+<p>Play classic Klondike Solitaire and build your foundations.</p>
+<button class="gold">Play Now →</button></div>
+</section>
 </main>
 
-<section id="gameScreen">
-    <button class="back-btn" onclick="backToMenu()">← Back to Games</button>
-
-    <h1 id="gameTitle"></h1>
-    <p id="gameDescription"></p>
-
-    <div class="table">
-        <div id="gameArea"></div>
-        <div class="game-controls" id="controls"></div>
-        <div id="status">Ready to play?</div>
-    </div>
+<section id="screen">
+<div class="topbar">
+<button class="gold" onclick="menu()">← All Games</button>
+<button class="gold" onclick="restart()">↻ Restart</button>
+</div>
+<h1 id="title"></h1>
+<p id="instructions"></p>
+<div class="table">
+<div id="board"></div>
+<div id="status"></div>
+<div id="controls" class="controls"></div>
+</div>
 </section>
 
-<footer>
-    CARDHOUSE © 2026 | THE CLASSIC CARD GAME COLLECTION
-</footer>
+<footer>CARDHOUSE ARCADE · CLASSIC CARD GAMES</footer>
 
 <script>
-let deck = [];
-let player = [];
-let dealer = [];
-let currentGame = "";
-let gameOver = false;
+const suits=["♠","♥","♦","♣"];
+const ranks=["A","2","3","4","5","6","7","8","9","10","J","Q","K"];
+let game="",deck=[],player=[],cpu=[],state={},locked=false;
 
-const suits = ["♠", "♥", "♦", "♣"];
-const ranks = ["A","2","3","4","5","6","7","8","9","10","J","Q","K"];
-
-function createDeck() {
-    let cards = [];
-
-    suits.forEach(suit => {
-        ranks.forEach((rank, index) => {
-            cards.push({
-                suit,
-                rank,
-                value: index + 1
-            });
-        });
-    });
-
-    return cards;
+function makeDeck(){
+ let d=[];
+ for(let s of suits)for(let i=0;i<13;i++)
+ d.push({s,r:ranks[i],v:i+1});
+ return d;
 }
-
-function shuffle(cards) {
-    for (let i = cards.length - 1; i > 0; i--) {
-        let j = Math.floor(Math.random() * (i + 1));
-        [cards[i], cards[j]] = [cards[j], cards[i]];
-    }
-    return cards;
+function shuffle(d){
+ for(let i=d.length-1;i>0;i--){
+  let j=Math.floor(Math.random()*(i+1));
+  [d[i],d[j]]=[d[j],d[i]];
+ }
+ return d;
 }
-
-function drawCard(card) {
-    let color = ["♥","♦"].includes(card.suit) ? "red" : "";
-    return `<span class="playing-card ${color}">
-        ${card.rank}${card.suit}
-    </span>`;
+function color(c){return c.s==="♥"||c.s==="♦"?"red":""}
+function card(c,fn="",small=false){
+ return `<span class="card ${color(c)} ${small?"small":""}"
+ onclick="${fn}">${c.r}${c.s}</span>`;
 }
-
-function startGame(name) {
-    currentGame = name;
-    document.getElementById("menu").style.display = "none";
-    document.getElementById("gameScreen").style.display = "block";
-
-    document.getElementById("gameTitle").textContent = name;
-    document.getElementById("gameDescription").textContent =
-        "Enjoy a classic game of " + name + "!";
-
-    newGame();
+function back(small=false){
+ return `<span class="card back ${small?"small":""}">★</span>`;
 }
-
-function backToMenu() {
-    document.getElementById("menu").style.display = "block";
-    document.getElementById("gameScreen").style.display = "none";
+function message(t){document.getElementById("status").textContent=t}
+function board(t){document.getElementById("board").innerHTML=t}
+function controls(t){document.getElementById("controls").innerHTML=t}
+function button(t,fn){return `<button onclick="${fn}">${t}</button>`}
+function start(g){
+ game=g;
+ document.getElementById("menu").style.display="none";
+ document.getElementById("screen").style.display="block";
+ document.getElementById("title").textContent=g;
+ const descriptions={
+ Blackjack:"Beat the dealer by getting closer to 21.",
+ War:"Win all the cards by beating the computer.",
+ "Go Fish":"Collect the most books of four matching cards.",
+ "Crazy Eights":"Play cards matching the suit or rank.",
+ "Old Maid":"Match pairs and avoid the unmatched queen.",
+ Solitaire:"Move all cards to the four foundation piles."
+ };
+ document.getElementById("instructions").textContent=descriptions[g];
+ restart();
 }
-
-function newGame() {
-    deck = shuffle(createDeck());
-    player = [];
-    dealer = [];
-    gameOver = false;
-
-    if (currentGame === "Blackjack") blackjack();
-    else if (currentGame === "War") war();
-    else if (currentGame === "Go Fish") goFish();
-    else if (currentGame === "Crazy Eights") crazyEights();
-    else if (currentGame === "Old Maid") oldMaid();
-    else solitaire();
+function menu(){
+ document.getElementById("screen").style.display="none";
+ document.getElementById("menu").style.display="block";
+}
+function restart(){
+ deck=shuffle(makeDeck());
+ player=[];cpu=[];state={};locked=false;
+ if(game==="Blackjack")bjStart();
+ if(game==="War")warStart();
+ if(game==="Go Fish")fishStart();
+ if(game==="Crazy Eights")crazyStart();
+ if(game==="Old Maid")maidStart();
+ if(game==="Solitaire")solStart();
 }
 
 // BLACKJACK
 
-function cardValue(card) {
-    if (["J","Q","K"].includes(card.rank)) return 10;
-    if (card.rank === "A") return 11;
-    return card.value;
+function bjStart(){
+ player=[deck.pop(),deck.pop()];
+ cpu=[deck.pop(),deck.pop()];
+ state.over=false;
+ bjRender();
 }
-
-function handValue(hand) {
-    let total = hand.reduce((sum, card) => sum + cardValue(card), 0);
-    let aces = hand.filter(card => card.rank === "A").length;
-
-    while (total > 21 && aces > 0) {
-        total -= 10;
-        aces--;
-    }
-
-    return total;
+function value(c){return c.r==="A"?11:["J","Q","K"].includes(c.r)?10:c.v}
+function total(hand){
+ let n=hand.reduce((a,c)=>a+value(c),0);
+ let aces=hand.filter(c=>c.r==="A").length;
+ while(n>21&&aces-->0)n-=10;
+ return n;
 }
-
-function blackjack() {
-    player = [deck.pop(), deck.pop()];
-    dealer = [deck.pop(), deck.pop()];
-    showBlackjack();
+function bjRender(){
+ let hide=!state.over;
+ board(`<h3>Dealer (${hide?"?":total(cpu)})</h3>
+ <div class="rowcards">${cpu.map((c,i)=>hide&&i===1?back():card(c,"",true)).join("")}</div>
+ <h3>Your hand (${total(player)})</h3>
+ <div class="rowcards">${player.map(c=>card(c,"",true)).join("")}</div>`);
+ if(state.over){
+ let a=total(player),b=total(cpu);
+ message(a>21?"You busted! Dealer wins.":b>21||a>b?"You win!":a===b?"It's a tie!":"Dealer wins!");
+ controls(button("Play Again","restart()"));
+ }else{
+ message("Choose Hit or Stand.");
+ controls(button("Hit","bjHit()")+button("Stand","bjStand()"));
+ }
 }
-
-function showBlackjack() {
-    document.getElementById("gameArea").innerHTML = `
-        <h3>Dealer (${gameOver ? handValue(dealer) : "?"})</h3>
-        ${dealer.map((c,i) =>
-            drawCard(c) 
-        ).join("")}
-
-        <br><br>
-        <h3>Your hand (${handValue(player)})</h3>
-        ${player.map(drawCard).join("")}
-    `;
-
-    if (gameOver) {
-        let p = handValue(player);
-        let d = handValue(dealer);
-
-        document.getElementById("status").textContent =
-            p > 21 ? "You busted! Dealer wins." :
-            d > 21 || p > d ? "You win!" :
-            p === d ? "It's a tie!" : "Dealer wins!";
-    }
-
-    document.getElementById("controls").innerHTML = gameOver
-        ? `<button onclick="newGame()">Play Again</button>`
-        : `<button onclick="hit()">Hit</button>
-           <button onclick="stand()">Stand</button>`;
+function bjHit(){
+ if(state.over)return;
+ player.push(deck.pop());
+ if(total(player)>=21)bjStand();
+ else bjRender();
 }
-
-function hit() {
-    if (gameOver) return;
-    player.push(deck.pop());
-
-    if (handValue(player) >= 21) stand();
-    else showBlackjack();
-}
-
-function stand() {
-    if (gameOver) return;
-    while (handValue(dealer) < 17) {
-        dealer.push(deck.pop());
-    }
-
-    gameOver = true;
-    showBlackjack();
+function bjStand(){
+ if(state.over)return;
+ while(total(cpu)<17)cpu.push(deck.pop());
+ state.over=true;bjRender();
 }
 
 // WAR
 
-function war() {
-    player = deck.splice(0,26);
-    dealer = deck.splice(0,26);
-    showWar();
+function warStart(){
+ player=deck.splice(0,26);
+ cpu=deck.splice(0,26);
+ state.round=0;
+ warRender("Press Play Round to begin.");
 }
-
-function showWar() {
-    if (!player.length || !dealer.length) {
-        document.getElementById("status").textContent =
-            player.length ? "You win the game!" : "Dealer wins the game!";
-        document.getElementById("gameArea").innerHTML = "";
-        document.getElementById("controls").innerHTML =
-            `<button onclick="newGame()">Play Again</button>`;
-        return;
-    }
-
-    document.getElementById("gameArea").innerHTML = `
-        <h3>Your cards: ${player.length}</h3>
-        <br>
-        <h3>Dealer's cards: ${dealer.length}</h3>
-    `;
-
-    document.getElementById("controls").innerHTML =
-        `<button onclick="playWar()">Play Round</button>`;
+function warRender(msg){
+ board(`<h3>Your cards: ${player.length}</h3>
+ <div class="rowcards">${back()}</div>
+ <h3>Computer cards: ${cpu.length}</h3>
+ <div class="rowcards">${back()}</div>`);
+ message(msg);
+ if(!player.length||!cpu.length){
+ message(player.length?"You won the war!":"The computer won the war!");
+ controls(button("Play Again","restart()"));
+ }else controls(button("Play Round","warRound()"));
 }
-
-function playWar() {
-    if (!player.length || !dealer.length) return;
-
-    let a = player.shift();
-    let b = dealer.shift();
-
-    let av = a.value;
-    let bv = b.value;
-
-    document.getElementById("gameArea").innerHTML = `
-        <h3>Your card</h3>${drawCard(a)}
-        <h3>Dealer's card</h3>${drawCard(b)}
-    `;
-
-    if (av > bv) {
-        player.push(a,b);
-        document.getElementById("status").textContent = "You win this round!";
-    } else if (bv > av) {
-        dealer.push(a,b);
-        document.getElementById("status").textContent = "Dealer wins this round!";
-    } else {
-        document.getElementById("status").textContent = "Tie! Cards returned to the deck.";
-        player.push(a);
-        dealer.push(b);
-    }
-
-    document.getElementById("controls").innerHTML =
-        `<button onclick="showWar()">Continue</button>`;
+function warRound(){
+ if(!player.length||!cpu.length)return;
+ let pot=[];
+ let a=player.shift(),b=cpu.shift();
+ pot.push(a,b);
+ let result="";
+ while(a.v===b.v){
+  result="War! ";
+  if(player.length<2||cpu.length<2){
+   result+="Not enough cards to continue.";
+   break;
+  }
+  pot.push(player.shift(),cpu.shift());
+  a=player.shift();b=cpu.shift();
+  pot.push(a,b);
+ }
+ if(a.v>b.v)player.push(...pot);
+ else if(b.v>a.v)cpu.push(...pot);
+ board(`<h3>Your card</h3>${card(a,"",true)}
+ <h3>Computer's card</h3>${card(b,"",true)}
+ <p class="info">Cards in the round: ${pot.length}</p>`);
+ if(a.v>b.v)result+=" You win the round!";
+ else if(b.v>a.v)result+=" Computer wins the round!";
+ else result+=" Round tied!";
+ message(result);
+ if(!player.length||!cpu.length){
+ message(player.length?"You won the war!":"Computer won the war!");
+ controls(button("Play Again","restart()"));
+ }else controls(button("Next Round","warRound()"));
 }
 
 // GO FISH
 
-function goFish() {
-    player = deck.splice(0,7);
-    dealer = deck.splice(0,7);
-    showFish();
+function fishStart(){
+ player=deck.splice(0,7);
+ cpu=deck.splice(0,7);
+ state.books=0;state.cpuBooks=0;
+ fishBooks(player);
+ fishBooks(cpu,true);
+ fishRender("Choose a rank to ask the computer for.");
 }
-
-function showFish() {
-    document.getElementById("gameArea").innerHTML = `
-        <h3>Your hand</h3>
-        ${player.map(drawCard).join("")}
-        <br><br>
-        <h3>Computer's cards: ${dealer.length}</h3>
-        <h3>Deck: ${deck.length}</h3>
-    `;
-
-    document.getElementById("controls").innerHTML =
-        player.map((c,i) =>
-            `<button onclick="askFish(${i})">${c.rank}</button>`
-        ).join("");
-
-    document.getElementById("status").textContent =
-        "Choose a rank to ask the computer for.";
+function fishBooks(hand,computer=false){
+ let count={};
+ hand.forEach(c=>count[c.r]=(count[c.r]||0)+1);
+ for(let r of Object.keys(count)){
+  while(count[r]>=4){
+   for(let i=0;i<4;i++)hand.splice(hand.findIndex(c=>c.r===r),1);
+   if(computer)state.cpuBooks++;else state.books++;
+   count[r]-=4;
+  }
+ }
 }
-
-function askFish(index) {
-    let rank = player[index].rank;
-    let matches = dealer.filter(c => c.rank === rank);
-
-    if (matches.length) {
-        player.push(...matches);
-        dealer = dealer.filter(c => c.rank !== rank);
-        document.getElementById("status").textContent = "You got a match!";
-    } else if (deck.length) {
-        player.push(deck.pop());
-        document.getElementById("status").textContent = "Go Fish! You drew a card.";
-    }
-
-    if (!dealer.length || !deck.length) {
-        document.getElementById("status").textContent = "Round finished!";
-    }
-
-    showFish();
+function fishDraw(hand){
+ if(deck.length)hand.push(deck.pop());
+}
+function fishRender(msg){
+ board(`<h3>Your hand (${player.length})</h3>
+ <div class="rowcards">${player.map((c,i)=>card(c,`fishAsk(${i})`,true)).join("")}</div>
+ <h3>Computer's cards: ${cpu.length}</h3>
+ <div class="rowcards">${back(true)}</div>
+ <p class="info">Your books: ${state.books} | Computer books: ${state.cpuBooks} | Deck: ${deck.length}</p>`);
+ message(msg);
+ if((!deck.length&&!player.length)||(!deck.length&&!cpu.length)){
+ let win=state.books>state.cpuBooks?"You win!":state.books===state.cpuBooks?"It's a tie!":"Computer wins!";
+ message("Game over! "+win);
+ controls(button("Play Again","restart()"));
+ }else controls("");
+}
+function fishAsk(i){
+ if(locked||!player[i])return;
+ locked=true;
+ let rank=player[i].r;
+ let matches=cpu.filter(c=>c.r===rank);
+ if(matches.length){
+  player.push(...matches);
+  cpu=cpu.filter(c=>c.r!==rank);
+  fishBooks(player);
+  fishRender("The computer had that rank! You get another turn.");
+  locked=false;return;
+ }
+ fishDraw(player);
+ fishRender("Go Fish! You drew a card.");
+ setTimeout(fishComputer,900);
+}
+function fishComputer(){
+ if(!cpu.length&&deck.length)fishDraw(cpu);
+ if(!cpu.length){locked=false;fishRender("Computer has no cards.");return;}
+ let rank=cpu[Math.floor(Math.random()*cpu.length)].r;
+ let matches=player.filter(c=>c.r===rank);
+ if(matches.length){
+  cpu.push(...matches);
+  player=player.filter(c=>c.r!==rank);
+  fishBooks(cpu,true);
+  locked=false;
+  fishRender("Computer found a match. Your turn!");
+ }else{
+  fishDraw(cpu);
+  locked=false;
+  fishRender("Computer says Go Fish. Your turn!");
+ }
 }
 
 // CRAZY EIGHTS
 
-let topCard;
-
-function crazyEights() {
-    player = deck.splice(0,7);
-    dealer = deck.splice(0,7);
-    topCard = deck.pop();
-    showCrazy();
+function crazyStart(){
+ player=deck.splice(0,7);
+ cpu=deck.splice(0,7);
+ state.top=deck.pop();
+ state.suit=state.top.s;
+ state.turn="player";
+ state.over=false;
+ crazyRender("Your turn. Match the suit or rank.");
 }
-
-function showCrazy() {
-    document.getElementById("gameArea").innerHTML = `
-        <h3>Top Card</h3>
-        ${drawCard(topCard)}
-        <br><br>
-        <h3>Your hand</h3>
-        ${player.map(drawCard).join("")}
-    `;
-
-    document.getElementById("controls").innerHTML =
-        player.map((c,i) =>
-            `<button onclick="playCrazy(${i})">${c.rank}${c.suit}</button>`
-        ).join("") +
-        `<button onclick="drawCrazy()">Draw Card</button>`;
+function legal(c){
+ return c.r==="8"||c.s===state.suit||c.r===state.top.r;
 }
-
-function playCrazy(index) {
-    let c = player[index];
-
-    if (c.rank !== "8" &&
-        c.suit !== topCard.suit &&
-        c.rank !== topCard.rank) {
-        document.getElementById("status").textContent =
-            "Choose a matching suit, rank, or an eight!";
-        return;
-    }
-
-    topCard = player.splice(index,1)[0];
-    document.getElementById("status").textContent = "Card played!";
-
-    if (!player.length) {
-        document.getElementById("status").textContent = "You win!";
-        gameOver = true;
-    }
-
-    showCrazy();
+function crazyRender(msg){
+ board(`<h3>Top card</h3>${card(state.top,"",true)}
+ <p class="info">Current suit: ${state.suit}</p>
+ <h3>Your hand</h3>
+ <div class="rowcards">${player.map((c,i)=>card(c,`crazyPlay(${i})`,true)).join("")}</div>
+ <h3>Computer cards: ${cpu.length}</h3>${back(true)}`);
+ message(msg);
+ controls(state.turn==="player"&&!state.over?button("Draw Card","crazyDraw()"):"");
 }
-
-function drawCrazy() {
-    if (deck.length) player.push(deck.pop());
-    showCrazy();
+function crazyPlay(i){
+ if(state.turn!=="player"||state.over)return;
+ let c=player[i];
+ if(!legal(c)){message("That card cannot be played.");return;}
+ if(c.r==="8"){
+ let choice=prompt("Choose a suit: S, H, D, or C");
+ let map={S:"♠",H:"♥",D:"♦",C:"♣"};
+ if(!map[(choice||"").toUpperCase()]){
+ message("Invalid suit. Try again.");return;
+ }
+ state.suit=map[choice.toUpperCase()];
+ }else state.suit=c.s;
+ state.top=player.splice(i,1)[0];
+ if(!player.length){state.over=true;crazyRender("You win!");controls(button("Play Again","restart()"));return;}
+ state.turn="cpu";
+ crazyRender("Computer's turn...");
+ setTimeout(crazyComputer,800);
+}
+function crazyDraw(){
+ if(state.turn!=="player"||state.over)return;
+ if(!deck.length){message("No cards left to draw.");return;}
+ player.push(deck.pop());
+ crazyRender("You drew a card. Your turn continues.");
+}
+function crazyComputer(){
+ if(state.over)return;
+ let i=cpu.findIndex(legal);
+ if(i<0){
+  if(deck.length)cpu.push(deck.pop());
+  i=cpu.findIndex(legal);
+ }
+ if(i>=0){
+  let c=cpu.splice(i,1)[0];
+  state.top=c;
+  if(c.r==="8")state.suit=cpu.length?cpu[0].s:state.suit;
+  else state.suit=c.s;
+ }
+ if(!cpu.length){state.over=true;crazyRender("Computer has won!");controls(button("Play Again","restart()"));return;}
+ state.turn="player";
+ crazyRender(i<0?"Computer draws. Your turn!":"Computer played a card. Your turn!");
 }
 
 // OLD MAID
 
-function oldMaid() {
-    player = deck.slice(0,25);
-    dealer = deck.slice(25,50);
-
-    // Remove one matching card to create an unmatched card.
-    let unmatched = player.pop();
-
-    dealer = dealer.filter(c =>
-        !(c.rank === unmatched.rank && c.suit === unmatched.suit)
-    );
-
-    player.push(...deck.slice(50,51));
-    showOldMaid();
+function maidStart(){
+ deck=deck.filter(c=>!(c.r==="Q"&&c.s==="♠"));
+ player=deck.splice(0,26);
+ cpu=deck.splice(0,25);
+ state.turn="player";
+ state.over=false;
+ maidPairs(player);maidPairs(cpu);
+ maidRender("Select a card to match a pair.");
+}
+function maidPairs(hand){
+ let removed=0;
+ for(let i=0;i<hand.length;i++){
+  let j=hand.findIndex((c,k)=>k>i&&c.r===hand[i].r);
+  if(j!==-1){
+   hand.splice(j,1);hand.splice(i,1);i--;removed++;
+  }
+ }
+ return removed;
+}
+function maidRender(msg){
+ board(`<h3>Your hand</h3>
+ <div class="rowcards">${player.map((c,i)=>card(c,`maidPick(${i})`,true)).join("")}</div>
+ <h3>Computer cards: ${cpu.length}</h3>
+ <div class="rowcards">${back(true)}</div>`);
+ message(msg);
+ controls("");
+ if(!player.length||!cpu.length){
+ message(player.length?"You are left with the Old Maid. Computer wins!":"You got rid of all your cards! You win!");
+ controls(button("Play Again","restart()"));
+ }
+}
+function maidPick(i){
+ if(state.turn!=="player"||!cpu.length||!player[i])return;
+ let c=player.splice(i,1)[0];
+ cpu.push(c);
+ maidPairs(player);
+ maidPairs(cpu);
+ if(!player.length||!cpu.length){maidRender("Game over!");return;}
+ state.turn="cpu";
+ maidRender("Computer is choosing a card...");
+ setTimeout(maidComputer,800);
+}
+function maidComputer(){
+ if(!player.length||!cpu.length)return;
+ let i=Math.floor(Math.random()*player.length);
+ let c=player.splice(i,1)[0];
+ cpu.push(c);
+ maidPairs(player);maidPairs(cpu);
+ state.turn="player";
+ maidRender("Your turn. Choose a card from the computer.");
 }
 
-function showOldMaid() {
-    document.getElementById("gameArea").innerHTML = `
-        <h3>Your hand</h3>
-        ${player.map(drawCard).join("")}
-        <br><br>
-        <h3>Computer's cards: ${dealer.length}</h3>
-    `;
+// SOLITAIRE - KLONDIKE
 
-    document.getElementById("controls").innerHTML =
-        `<button onclick="drawOldMaid()">Draw From Computer</button>`;
+function solStart(){
+ let d=shuffle(makeDeck());
+ state.cols=[];
+ state.found=[[],[],[],[]];
+ state.stock=d;
+ state.waste=[];
+ state.selected=null;
+ for(let i=0;i<7;i++){
+  let col=[];
+  for(let j=0;j<=i;j++){
+   let c=d.pop();
+   c.up=j===i;
+   col.push(c);
+  }
+  state.cols.push(col);
+ }
+ solRender("Select a face-up card to move it.");
 }
-
-function drawOldMaid() {
-    if (!dealer.length) return;
-
-    let i = Math.floor(Math.random() * dealer.length);
-    player.push(dealer.splice(i,1)[0]);
-
-    document.getElementById("status").textContent =
-        "You drew a card!";
-
-    showOldMaid();
+function solRender(msg){
+ let html=`<div class="rowcards">
+ <div class="zone"><h4>STOCK</h4><span class="card back" onclick="solStock()">★</span></div>
+ <div class="zone"><h4>WASTE</h4>${state.waste.length?card(state.waste.at(-1),"solWaste()",true):'<span class="placeholder">—</span>'}</div>`;
+ state.found.forEach((f,i)=>{
+  html+=`<div class="zone"><h4>FOUNDATION</h4>${f.length?card(f.at(-1),`solFoundation(${i})`,true):`<span class="placeholder" onclick="solFoundation(${i})">A</span>`}</div>`;
+ });
+ html+=`</div><div class="rowcards" style="justify-content:center;align-items:flex-start">`;
+ state.cols.forEach((col,i)=>{
+  html+=`<div class="column" onclick="solColumn(${i})">`;
+  if(!col.length)html+=`<span class="placeholder">K</span>`;
+  col.forEach((c,j)=>{
+   html+=c.up?`<span class="card ${color(c)} ${state.selected&&state.selected.col===i&&state.selected.index===j?"selected":""}" onclick="event.stopPropagation();solSelect(${i},${j})">${c.r}${c.s}</span>`:back();
+  });
+  html+="</div>";
+ });
+ html+="</div>";
+ board(html);
+ message(msg);
+ controls(button("Undo Selection","solClear()")+button("Restart","restart()"));
+ if(state.found.every(f=>f.length===13)){
+  message("Congratulations! You won Solitaire!");
+ }
 }
-
-// SOLITAIRE (BASIC CARD DEMO)
-
-function solitaire() {
-    player = deck.splice(0,28);
-
-    document.getElementById("gameArea").innerHTML = `
-        <h3>Stock pile</h3>
-        ${drawCard(deck[0])}
-        <br><br>
-        <h3>Your cards</h3>
-        ${player.slice(0,7).map(drawCard).join("")}
-    `;
-
-    document.getElementById("controls").innerHTML =
-        `<button onclick="newGame()">Restart Solitaire</button>`;
-
-    document.getElementById("status").textContent =
-        "Solitaire preview. Full Klondike rules are not implemented yet.";
+function solStock(){
+ if(state.stock.length){
+  let c=state.stock.pop();c.up=true;state.waste.push(c);
+ }else if(state.waste.length){
+  state.stock=state.waste.reverse();
+  state.waste=[];
+ }
+ solClear(false);
+ solRender("Stock pile updated.");
+}
+function solClear(render=true){
+ state.selected=null;
+ if(render)solRender("Selection cleared.");
+}
+function solSelect(col,index){
+ let c=state.cols[col][index];
+ if(!c.up)return;
+ if(state.selected){
+  if(state.selected.col===col&&state.selected.index===index){
+   solClear();return;
+  }
+  if(solMoveToColumn(col))return;
+ }
+ state.selected={col,index};
+ solRender("Card selected. Choose another column or foundation.");
+}
+function solWaste(){
+ if(!state.waste.length)return;
+ if(state.selected){
+  if(solMoveWasteToFoundation())return;
+ }
+ state.selected={waste:true};
+ solRender("Waste card selected. Choose a destination.");
+}
+function solGetSelected(){
+ if(!state.selected)return null;
+ if(state.selected.waste)return state.waste.slice(-1);
+ return state.cols[state.selected.col].slice(state.selected.index);
+}
+function solMoveToColumn(dest){
+ let cards=solGetSelected();
+ if(!cards||!cards.length)return false;
+ let target=state.cols[dest];
+ let first=cards[0];
+ let last=target.at(-1);
+ let valid=target.length===0?first.r==="K":last.up&&color(last)!==color(first)&&last.v===first.v+1;
+ if(!valid)return false;
+ if(state.selected.waste)state.waste.pop();
+ else{
+  let source=state.cols[state.selected.col];
+  source.splice(state.selected.index);
+  if(source.length)source.at(-1).up=true;
+ }
+ target.push(...cards);
+ state.selected=null;
+ solRender("Cards moved.");
+ return true;
+}
+function solColumn(i){
+ if(state.selected){
+  if(solMoveToColumn(i))return;
+ }
+ if(!state.cols[i].length&&state.selected)solMoveToColumn(i);
+}
+function solMoveWasteToFoundation(){
+ let c=state.waste.at(-1);
+ let f=state.found[state.selected.foundation];
+ if(!f)return false;
+ return false;
+}
+function solFoundation(i){
+ if(!state.selected)return;
+ let cards=solGetSelected();
+ if(!cards||cards.length!==1)return;
+ let c=cards[0],f=state.found[i],last=f.at(-1);
+ let valid=f.length===0?c.r==="A":c.s===last.s&&c.v===last.v+1;
+ if(!valid)return;
+ if(state.selected.waste)state.waste.pop();
+ else{
+  let source=state.cols[state.selected.col];
+  source.splice(state.selected.index);
+  if(source.length)source.at(-1).up=true;
+ }
+ f.push(c);
+ state.selected=null;
+ solRender("Card moved to foundation.");
 }
 </script>
-
 </body>
 </html>
